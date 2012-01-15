@@ -60,7 +60,7 @@ module Draughts
         buf << "\n"
       end
 
-      buf.join
+      buf.map { |c| c == "" ? " " : c }.join
     end
 
     private
