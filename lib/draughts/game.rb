@@ -57,7 +57,16 @@ module Draughts
     def read_dest
       print "Where would you like to move it? "
       dest = gets.to_i
+
       correct_position(dest)
+
+      while @board[dest]
+        print "That square is not empty, try again: "
+        dest = gets.to_i
+        dest = correct_position(dest)
+      end
+
+      dest
     end
 
     def correct_position(pos)

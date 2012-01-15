@@ -1,4 +1,6 @@
 module Draughts
+  SquareNotEmptyException = Class.new(Exception)
+
   class Board
     def initialize
       @pieces = init_pieces
@@ -14,6 +16,11 @@ module Draughts
     alias :[] :piece_at
 
     def move(from, to)
+      from -= 1
+      to   -= 1
+
+      raise SquareNotEmptyException if @pieces[to]
+
       puts "Moved from #{from} to #{to}"
     end
 
