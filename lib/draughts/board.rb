@@ -68,8 +68,8 @@ module Draughts
     def init_pieces
       pieces = []
 
-      12.times { pieces.insert(0,  Piece.new(:black)) }
-      12.times { pieces.insert(20, Piece.new(:white)) }
+      12.times { pieces.insert(0,  BlackPiece.new) }
+      12.times { pieces.insert(20, WhitePiece.new) }
 
       pieces
     end
