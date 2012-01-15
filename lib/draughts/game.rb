@@ -45,7 +45,7 @@ module Draughts
 
       origin = correct_position(origin)
 
-      while @board[origin].color != @turn
+      while @board[origin].nil? || @board[origin].color != @turn
         print "It's #{@turn}'s turn, try again: "
         origin = gets.to_i
         origin = correct_position(origin)
