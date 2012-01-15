@@ -4,6 +4,10 @@ module Draughts
       @pieces = init_pieces
     end
 
+    def move(from, to)
+      puts "Moved from #{from} to #{to}"
+    end
+
     def count(color)
       color == :blacks ? blacks_count : whites_count
     end
