@@ -40,39 +40,29 @@ module Draughts
     end
 
     def read_origin
-      print "Which piece would you like to move? Enter it's position: "
-      origin = gets.to_i
-
-      origin = correct_position(origin)
+      origin = read_position(:msg => "Which piece would you like to move? Enter it's position: ")
 
       while @board[origin].nil? || @board[origin].color != @turn
-        print "It's #{@turn}'s turn, try again: "
-        origin = gets.to_i
-        origin = correct_position(origin)
+        origin = read_position(:msg => "It's #{@turn}'s turn, try again: ")
       end
 
       origin
     end
 
     def read_dest
-      print "Where would you like to move it? "
-      dest = gets.to_i
-
-      correct_position(dest)
+      dest = read_position(:msg => "Where would you like to move it? ")
 
       while @board[dest]
-        print "That square is not empty, try again. Enter a new destination: "
-        dest = gets.to_i
-        dest = correct_position(dest)
+        dest = read_position(:msg => "That square is not empty, try again. Enter a new destination: ")
       end
 
       dest
     end
 
-    def correct_position(pos)
-      while !(1..32).include? pos
+    def read_position(opts)
+      print opts[:msg]
+      while !(1..32).include? (pos = gets.to_i)
         print "Invalid position, try again: "
-        pos = gets.to_i
       end
 
       pos
