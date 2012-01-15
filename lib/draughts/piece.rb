@@ -16,7 +16,7 @@ module Draughts
     end
 
     def to_s
-      @color
+      @color.to_s[0].capitalize
     end
   end
 end

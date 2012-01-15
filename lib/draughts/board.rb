@@ -13,11 +13,11 @@ module Draughts
     end
 
     def whites_count
-      @pieces.count { |p| !p.nil? && p.color == :w }
+      @pieces.count { |p| !p.nil? && p.color == :white }
     end
 
     def blacks_count
-      @pieces.count { |p| !p.nil? && p.color == :b }
+      @pieces.count { |p| !p.nil? && p.color == :black }
     end
 
     def to_s
@@ -52,8 +52,8 @@ module Draughts
     def init_pieces
       pieces = []
 
-      12.times { pieces.insert(0,  Piece.new(:b)) }
-      12.times { pieces.insert(20, Piece.new(:w)) }
+      12.times { pieces.insert(0,  Piece.new(:black)) }
+      12.times { pieces.insert(20, Piece.new(:white)) }
 
       pieces
     end

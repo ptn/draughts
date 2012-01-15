@@ -2,13 +2,13 @@ module Draughts
   class Game
     def start
       @board = Board.new
-      @turn = :blacks
+      @turn = :black
       loop
     end
 
     def print_result
       winner = next_turn.to_s.capitalize
-      puts "#{winner} wins!"
+      puts "#{winner}s wins!"
     end
 
     def input
@@ -22,7 +22,7 @@ module Draughts
 
       #TODO Check if the player has available moves, terminate if not.
       while @board.count(@turn) > 0
-        puts "#{@turn.to_s.capitalize} move"
+        puts "#{@turn.to_s.capitalize}s move"
 
         origin, dest = input
         @board.move(origin, dest)
@@ -36,7 +36,7 @@ module Draughts
     end
 
     def next_turn
-      @turn == :blacks ? :whites : :blacks
+      @turn == :black ? :white : :black
     end
 
     def read_origin
