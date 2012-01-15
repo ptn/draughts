@@ -24,6 +24,9 @@ module Draughts
     end
 
     def valid_move?(from, to)
+      #TODO Implement real functionality.
+      return true
+
       row = Utils.index_to_row(from)
 
       if row.even?
@@ -41,6 +44,9 @@ module Draughts
     end
 
     def valid_move?(from, to)
+      #TODO Implement real functionality.
+      return true
+
       row = Utils.index_to_row(from)
 
       if row.even?

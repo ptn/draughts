@@ -1,6 +1,4 @@
 module Draughts
-  SquareNotEmptyException = Class.new(Exception)
-
   class Board
     def initialize
       @pieces = init_pieces
@@ -8,7 +6,6 @@ module Draughts
 
     # Takes an integer in the range (1..32), which is standard notation for
     # checkers. This encapsulates the underlying Array.
-    #
     def piece_at(pos)
       @pieces[pos - 1]
     end
@@ -16,12 +13,16 @@ module Draughts
     alias :[] :piece_at
 
     def move(from, to)
-      from -= 1
-      to   -= 1
+      return false if @pieces[to - 1]
+      return false unless @pieces[from - 1]
 
-      raise SquareNotEmptyException if @pieces[to]
+      result = @pieces[from - 1].valid_move? from, to
+      if result
+        @pieces[to - 1]   = @pieces[from - 1]
+        @pieces[from - 1] = nil
+      end
 
-      puts "Moved from #{from} to #{to}"
+      result
     end
 
     def count(color)

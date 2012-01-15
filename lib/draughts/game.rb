@@ -18,18 +18,18 @@ module Draughts
     private
 
     def loop
-      puts @board
-
       #TODO Check if the player has available moves, terminate if not.
       while @board.count(@turn) > 0
+        puts @board
         puts "#{@turn.to_s.capitalize}s move"
 
         origin, dest = input
-        @board.move(origin, dest)
+        if !@board.move(origin, dest)
+          puts "You can't move there. Repeating the turn..."
+          redo
+        end
 
         @turn = next_turn
-
-        puts @board
       end
 
       print_result
@@ -61,7 +61,7 @@ module Draughts
       correct_position(dest)
 
       while @board[dest]
-        print "That square is not empty, try again: "
+        print "That square is not empty, try again. Enter a new destination: "
         dest = gets.to_i
         dest = correct_position(dest)
       end
