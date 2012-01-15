@@ -16,10 +16,11 @@ module Draughts
       return false if @pieces[to - 1]
       return false unless @pieces[from - 1]
 
-      result = @pieces[from - 1].valid_move? from, to
+      moving = @pieces[from - 1]
+      result = moving.valid_move? from, to
       if result
-        @pieces[to - 1]   = @pieces[from - 1]
         @pieces[from - 1] = nil
+        @pieces[to - 1]   = (moving.crowns_in? to) ? moving.crown : moving
       end
 
       result

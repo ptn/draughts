@@ -35,6 +35,10 @@ module Draughts
         [from + 4, from + 5].include? to
       end
     end
+
+    def crowns_in?(pos)
+      pos == 8
+    end
   end
 
   class WhitePiece < Piece
@@ -55,11 +59,17 @@ module Draughts
         [from + -3, from + -4].include? to
       end
     end
+
+    def crowns_in?(pos)
+      pos == 1
+    end
   end
 
   class King < Piece
     def initialize(color)
       @color = color
+      @white_proxy = WhitePiece.new
+      @black_proxy = BlackPiece.new
     end
 
     def king?
@@ -68,6 +78,14 @@ module Draughts
 
     def to_s
       @color.to_s[0].capitalize
+    end
+
+    def valid_move?(from, to)
+      (@white_proxy.valid_move? from, to) || (@black_proxy.valid_move? from, to)
+    end
+
+    def crowns_in?(pos)
+      false
     end
   end
 end
