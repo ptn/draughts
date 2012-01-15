@@ -4,20 +4,16 @@ module Draughts
   class Piece
     attr_reader :color
 
-    def initialize
-      @king = false
-    end
-
     def crown
-      @king = true
+      King.new(@color)
     end
 
     def king?
-      @king
+      false
     end
 
     def to_s
-      @color.to_s[0].capitalize
+      @color.to_s[0]
     end
   end
 
@@ -52,6 +48,20 @@ module Draughts
       else
         [from + -3, from + -4].include? to
       end
+    end
+  end
+
+  class King < Piece
+    def initialize(color)
+      @color = color
+    end
+
+    def king?
+      true
+    end
+
+    def to_s
+      @color.to_s[0].capitalize
     end
   end
 end
