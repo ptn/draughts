@@ -4,6 +4,15 @@ module Draughts
       @pieces = init_pieces
     end
 
+    # Takes an integer in the range (1..32), which is standard notation for
+    # checkers. This encapsulates the underlying Array.
+    #
+    def piece_at(pos)
+      @pieces[pos - 1]
+    end
+
+    alias :[] :piece_at
+
     def move(from, to)
       puts "Moved from #{from} to #{to}"
     end

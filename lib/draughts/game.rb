@@ -42,7 +42,16 @@ module Draughts
     def read_origin
       print "Which piece would you like to move? Enter it's position: "
       origin = gets.to_i
-      correct_position(origin)
+
+      origin = correct_position(origin)
+
+      while @board[origin].color != @turn
+        print "It's #{@turn}'s turn, try again: "
+        origin = gets.to_i
+        origin = correct_position(origin)
+      end
+
+      origin
     end
 
     def read_dest
