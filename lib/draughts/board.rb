@@ -83,7 +83,8 @@ module Draughts
       check  = jumping.valid_jump_destination? from, to
       return unless check
 
-      valid  = (@pieces[check - 1].color != jumping.color)
+      target = @pieces[check - 1]
+      valid  = (!target.nil? && target.color != jumping.color)
       return unless valid
 
       move_result = perform_move(from, to)
