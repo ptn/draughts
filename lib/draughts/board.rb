@@ -13,13 +13,19 @@ module Draughts
     alias :[] :piece_at
 
 
-    # Trites to move the piece at +from+ to square +to+. Returns a log of
-    # consequences (capturing, crowning, etc.) or nil if the move is not valid.
+    # Tries to move the piece at +from+ to square +to+. Returns a log of
+    # consequences (capturing, crowning, etc.) or an explanation of the error.
     def play(from, to)
       return false if @pieces[to - 1]
       return false unless @pieces[from - 1]
 
-      move(from, to) || jump(from, to)
+      # Move and jump return false on failure and output messages on success.
+      result = move(from, to) || jump(from, to)
+      if result
+        [true, result]
+      else
+        [false, "You can't neither capture nor move from #{from} to #{to}"]
+      end
     end
 
     def count(color)

@@ -3,6 +3,10 @@ module Draughts
     def start
       @board = Board.new
       @turn = :black
+
+      puts start_instructions
+      puts
+
       loop
     end
 
@@ -11,20 +15,33 @@ module Draughts
       puts "#{winner}s wins!"
     end
 
+    def start_instructions
+      <<-MSG
+      Game starting.
+
+      Standard notation is used for entering moves:
+      The black squares are labeled from 1 to 32 starting
+      in the bottom right and ending in the top left.
+      These are the numbers you have to input to make moves.
+      MSG
+    end
+
     private
 
     def loop
       #TODO Check if the player has available moves, terminate if not.
       while @board.count(@turn) > 0
+        puts
         puts @board
-        puts "#{@turn.to_s.capitalize}s move"
+        puts
+        puts "#{@turn.to_s.capitalize}s move."
 
         origin, dest = read_origin, read_dest
-        result = @board.play(origin, dest)
+        result, msg = @board.play(origin, dest)
 
-        puts result
+        puts
+        puts msg
         unless result
-          puts "You can't move there. Repeating the turn..."
           redo
         end
 
@@ -42,7 +59,7 @@ module Draughts
       origin = read_position(:msg => "Which piece would you like to move? Enter it's position: ")
 
       while @board[origin].nil? || @board[origin].color != @turn
-        origin = read_position(:msg => "It's #{@turn}'s turn, try again: ")
+        origin = read_position(:msg => "It's #{@turn}'s turn, enter the position of a #{@turn} piece: ")
       end
 
       origin
@@ -52,7 +69,7 @@ module Draughts
       dest = read_position(:msg => "Where would you like to move it? ")
 
       while @board[dest]
-        dest = read_position(:msg => "That square is not empty, try again. Enter a new destination: ")
+        dest = read_position(:msg => "That square is not empty, enter a new destination: ")
       end
 
       dest
