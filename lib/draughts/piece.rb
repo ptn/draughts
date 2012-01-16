@@ -1,4 +1,4 @@
-require 'draughts/utils'
+require_relative 'utils'
 
 module Draughts
   class Piece
