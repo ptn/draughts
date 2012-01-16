@@ -11,10 +11,6 @@ module Draughts
       puts "#{winner}s wins!"
     end
 
-    def input
-      [read_origin, read_dest]
-    end
-
     private
 
     def loop
@@ -23,7 +19,7 @@ module Draughts
         puts @board
         puts "#{@turn.to_s.capitalize}s move"
 
-        origin, dest = input
+        origin, dest = read_origin, read_dest
         result = @board.play(origin, dest)
 
         puts result
