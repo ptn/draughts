@@ -58,10 +58,12 @@ module Draughts
 
         4.times do |col_index|
           buf << first[col_index].to_s
+          buf << " | "
           buf << second[col_index].to_s
+          buf << " | "
         end
 
-        buf << "\n"
+        buf << "\n" + ("-" * 32) + "\n"
       end
 
       buf.map { |c| c == "" ? " " : c }.join
