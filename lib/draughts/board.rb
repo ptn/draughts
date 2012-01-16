@@ -12,18 +12,11 @@ module Draughts
 
     alias :[] :piece_at
 
-    def move(from, to)
+    def play(from, to)
       return false if @pieces[to - 1]
       return false unless @pieces[from - 1]
 
-      moving = @pieces[from - 1]
-      result = moving.valid_move? from, to
-      if result
-        @pieces[from - 1] = nil
-        @pieces[to - 1]   = (moving.crowns_in? to) ? moving.crown : moving
-      end
-
-      result
+      move(from, to) || jump(from, to)
     end
 
     def count(color)
@@ -74,6 +67,30 @@ module Draughts
       12.times { pieces.insert(20, WhitePiece.new) }
 
       pieces
+    end
+
+    def move(from, to)
+      result = @pieces[from - 1].valid_move? from, to
+      perform_move(from, to) if result
+      result
+    end
+
+    def jump(from, to)
+      jumping = @pieces[from - 1]
+
+      check   = jumping.valid_jump_destination? from, to
+      result  = (@pieces[check - 1].color != jumping.color) if check
+
+      perform_move(from, to) if result
+      @pieces[check - 1] = nil
+
+      result
+    end
+
+    def perform_move(from, to)
+      moving = @pieces[from - 1]
+      @pieces[from - 1] = nil
+      @pieces[to - 1]   = (moving.crowns_in? to) ? moving.crown : moving
     end
   end
 end
