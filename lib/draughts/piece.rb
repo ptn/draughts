@@ -4,7 +4,7 @@ module Draughts
   class Piece
     attr_reader :color
 
-    def crown
+    def crowned
       King.new(@color)
     end
 

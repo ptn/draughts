@@ -24,7 +24,10 @@ module Draughts
         puts "#{@turn.to_s.capitalize}s move"
 
         origin, dest = input
-        if !@board.play(origin, dest)
+        result = @board.play(origin, dest)
+
+        puts result
+        unless result
           puts "You can't move there. Repeating the turn..."
           redo
         end

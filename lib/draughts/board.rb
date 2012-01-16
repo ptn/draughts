@@ -12,6 +12,9 @@ module Draughts
 
     alias :[] :piece_at
 
+
+    # Trites to move the piece at +from+ to square +to+. Returns a log of
+    # consequences (capturing, crowning, etc.) or nil if the move is not valid.
     def play(from, to)
       return false if @pieces[to - 1]
       return false unless @pieces[from - 1]
@@ -70,27 +73,34 @@ module Draughts
     end
 
     def move(from, to)
-      result = @pieces[from - 1].valid_move? from, to
-      perform_move(from, to) if result
-      result
+      valid = @pieces[from - 1].valid_move? from, to
+      perform_move(from, to) if valid
     end
 
     def jump(from, to)
       jumping = @pieces[from - 1]
 
-      check   = jumping.valid_jump_destination? from, to
-      result  = (@pieces[check - 1].color != jumping.color) if check
+      check  = jumping.valid_jump_destination? from, to
+      return unless check
 
-      perform_move(from, to) if result
+      valid  = (@pieces[check - 1].color != jumping.color)
+      return unless valid
+
+      move_result = perform_move(from, to)
       @pieces[check - 1] = nil
-
-      result
+      "#{move_result}; CAPTURED ENEMY ON #{check}"
     end
 
     def perform_move(from, to)
       moving = @pieces[from - 1]
       @pieces[from - 1] = nil
-      @pieces[to - 1]   = (moving.crowns_in? to) ? moving.crown : moving
+      if moving.crowns_in? to
+        @pieces[to - 1] = moving.crowned
+        "CROWNED"
+      else
+        @pieces[to - 1] = moving
+        "MOVED"
+      end
     end
   end
 end
