@@ -1,7 +1,7 @@
 require 'data_mapper'
 
 module Draughts
-  module Bot
+  module AI
     base = File.expand_path("~/.draughts")
     DataMapper::Logger.new(File.join(base, 'db.log'), :debug)
     DataMapper.setup(:default, 'sqlite://' + File.join(base,'draughts.db'))

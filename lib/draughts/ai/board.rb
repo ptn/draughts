@@ -1,7 +1,7 @@
 require_relative '../../../config/bots'
 
 module Draughts
-  module Bot
+  module AI
     #
     # Represents a board in a format that bots can manipulate.
     #

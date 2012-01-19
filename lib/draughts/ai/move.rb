@@ -1,5 +1,5 @@
 module Draughts
-  module Bot
+  module AI
     class Move
       include DataMapper::Resource
 

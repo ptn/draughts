@@ -1,5 +1,5 @@
 module Draughts
-  module Bot
+  module AI
     module Config
       TRESHOLD = 5
     end
