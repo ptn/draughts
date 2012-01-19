@@ -1,0 +1,17 @@
+module Draughts
+  module Bot
+    class Move
+      include DataMapper::Resource
+
+      property :id,          Serial
+      property :origin,      Integer
+      property :destination, Integer
+
+      validates_numericality_of :origin,      :gte => 1, :lte => 32
+      validates_numericality_of :destination, :gte => 1, :lte => 32
+
+      has n, :plays
+      has n, :boards, :through => :plays
+    end
+  end
+end
