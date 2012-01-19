@@ -1,3 +1,3 @@
-require_relative 'draughts/piece'
-require_relative 'draughts/board'
-require_relative 'draughts/game'
+require_relative 'draughts/engine/piece'
+require_relative 'draughts/engine/board'
+require_relative 'draughts/engine/game'
