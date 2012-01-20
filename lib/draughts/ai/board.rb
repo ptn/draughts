@@ -18,8 +18,8 @@ module Draughts
     class Board
       include DataMapper::Resource
 
-      property :id,           Serial
-      property :configuraton, String, :length => 32
+      property :id,            Serial
+      property :configuration, String, :length => 32, :unique => true
 
       has n, :plays
       has n, :moves, :through => :plays
@@ -62,7 +62,7 @@ module Draughts
 
         return if boards.count == 0
 
-        board = boards.select { |b| b.configuraton == conf }.first
+        board = boards.select { |b| b.configuration == conf }.first
         unless board
           board = board_with_least_difference(conf, boards)
         end
@@ -90,7 +90,7 @@ module Draughts
         min_diff = 33
 
         boards.each do |b|
-          diff = difference(conf, b.configuraton)
+          diff = difference(conf, b.configuration)
           if diff < min_diff
             board = b
             min_diff = diff
@@ -99,6 +99,7 @@ module Draughts
 
         board
       end
+
     end
   end
 end
