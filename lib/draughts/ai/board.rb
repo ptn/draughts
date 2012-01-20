@@ -56,7 +56,7 @@ module Draughts
       #
       # w-w-b- - - -w
       #
-      def self.get_most_alike(conf)
+      def self.get_this_or_most_alike(conf)
         #TODO Optimize
         boards = Board.all.select { |b| b.plays.count >= Config::TRESHOLD }
 
@@ -84,7 +84,7 @@ module Draughts
       #
       def count_origin_in_legal(origin)
         moves_from_origin = moves.all(:origin => origin)
-        result = moves_from_origin.plays.count(:legal => true)
+        moves_from_origin.plays.count(:legal => true)
       end
 
       #
@@ -92,7 +92,7 @@ module Draughts
       #
       def count_origin_in_illegal(origin)
         moves_from_origin = moves.all(:origin => origin)
-        result = moves_from_origin.plays.count(:legal => false)
+        moves_from_origin.plays.count(:legal => false)
       end
 
       #
@@ -100,7 +100,7 @@ module Draughts
       #
       def count_destination_in_legal(dest)
         moves_from_dest = moves.all(:destination => dest)
-        result = moves_from_dest.plays.count(:legal => true)
+        moves_from_dest.plays.count(:legal => true)
       end
 
       #
@@ -108,7 +108,37 @@ module Draughts
       #
       def count_destination_in_illegal(dest)
         moves_from_dest = moves.all(:destination => dest)
-        result = moves_from_dest.plays.count(:legal => false)
+        moves_from_dest.plays.count(:legal => false)
+      end
+
+      #
+      # Counts distinct squares that appear as an origin in a known move.
+      #
+      def distinct_origin_count
+        query = <<-SQL
+          SELECT distinct(m.origin)
+          FROM draughts_ai_moves m
+            JOIN draughts_ai_plays p
+            ON p.move_id = m.id
+          WHERE board_id = ?
+        SQL
+
+        repository.adapter.select(query, [id]).count
+      end
+
+      #
+      # Counts distinct squares that appear as an destination in a known move.
+      #
+      def distinct_destination_count
+        query = <<-SQL
+          SELECT distinct(m.destination)
+          FROM draughts_ai_moves m
+            JOIN draughts_ai_plays p
+            ON p.move_id = m.id
+          WHERE board_id = ?
+        SQL
+
+        repository.adapter.select(query, [id]).count
       end
 
       private
