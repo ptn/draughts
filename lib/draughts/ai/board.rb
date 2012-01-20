@@ -79,6 +79,38 @@ module Draughts
         diff
       end
 
+      #
+      # Count the number of known legal moves that start from +origin+.
+      #
+      def count_origin_in_legal(origin)
+        moves_from_origin = moves.all(:origin => origin)
+        result = moves_from_origin.plays.count(:legal => true)
+      end
+
+      #
+      # Count the number of known illegal moves that start from +origin+.
+      #
+      def count_origin_in_illegal(origin)
+        moves_from_origin = moves.all(:origin => origin)
+        result = moves_from_origin.plays.count(:legal => false)
+      end
+
+      #
+      # Count the number of known legal moves that end in +dest+.
+      #
+      def count_destination_in_legal(dest)
+        moves_from_dest = moves.all(:destination => dest)
+        result = moves_from_dest.plays.count(:legal => true)
+      end
+
+      #
+      # Count the number of known illegal moves that end in +dest+.
+      #
+      def count_destination_in_illegal(dest)
+        moves_from_dest = moves.all(:destination => dest)
+        result = moves_from_dest.plays.count(:legal => false)
+      end
+
       private
 
       #
