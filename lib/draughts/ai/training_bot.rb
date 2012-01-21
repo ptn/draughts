@@ -42,7 +42,10 @@ module Draughts
         untested = Move.all - @board.moves
         untested.each do |ut|
           prob = probability_of(ut)
-          best_move = ut if max < prob
+          if max < prob
+            max = prob
+            best_move = ut
+          end
         end
 
         best_move
