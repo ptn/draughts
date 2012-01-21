@@ -24,8 +24,9 @@ module Draughts
     class TrainingBot
 
       def initialize(conf)
-        @board = Board.get_this_or_most_alike(conf)
-        @conf = conf
+        @board  = Board.get_this_or_most_alike(conf)
+        @factor = Board.similarity_factor(conf, @board.configuration)
+        @conf   = conf
       end
 
       #
@@ -100,7 +101,7 @@ module Draughts
         numerator   = pol * pdl * pl
         denominator = numerator + poi * pdi * pi
 
-        numerator / denominator
+        numerator / denominator * @factor
       end
 
       def register(result)

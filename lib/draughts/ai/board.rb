@@ -79,6 +79,14 @@ module Draughts
         diff
       end
 
+      def self.similarity(conf1, conf2)
+        32 - difference(conf1, conf2)
+      end
+
+      def self.similarity_factor(conf1, conf2)
+        similarity(conf1, conf2) / 32.0
+      end
+
       #
       # Count the number of known legal moves that start from +origin+.
       #
