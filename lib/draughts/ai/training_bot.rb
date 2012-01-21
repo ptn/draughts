@@ -4,19 +4,20 @@ module Draughts
   module AI
 
     #
-    # A bot that tries to discover the rules of the game.
+    # A bot that discovers the rules of the game.
     #
     # The bot is given the configuration of a board (what piece is in every of
     # the playable squares) and it finds the move that's most likely to be
     # legal, according to the following algorithm:
     #
     # 1) Load a usable board. For a board to be usable, it must have at least
-    # Config::TRESHOLD number of known moves. If nothing is known about the
-    # configuration passed to the bot, use the known board that's most similar
-    # to it.
+    # Config::TRESHOLD number of known moves. If there is no data available for
+    # the requested configuration, use the known board that's most similar to
+    # it. Measure how similar the board loaded is to the board requested with a
+    # ratio called the similarity factor.
     #
     # 2) Choose from the set of untested moves that which has the highest
-    # probability of being legal.
+    # probability of being legal, adjusted with the similarity factor.
     #
     # Once the move has been played, the register method should be invoked to
     # record whether the last move was legal or illegal.

@@ -70,6 +70,10 @@ module Draughts
         board
       end
 
+      #
+      # Compare two board configurations char by char and return how many chars
+      # were different.
+      #
       def self.difference(conf1, conf2)
         diff = 0
         32.times do |i|
@@ -79,10 +83,26 @@ module Draughts
         diff
       end
 
+      #
+      # Compare two board configurations char by char and return how many chars
+      # were equal.
+      #
       def self.similarity(conf1, conf2)
         32 - difference(conf1, conf2)
       end
 
+      #
+      # Calculate the ratio of similarity between two configurations.
+      #
+      # Examples:
+      #
+      # similarity_factor = 1:   the configurations are the same
+      #
+      # similarity_factor = 0:   the configurations don't have the same piece
+      #                          in equivalent squares
+      #
+      # similarity_factor = 0.5: 16 squares have the same piece
+      #
       def self.similarity_factor(conf1, conf2)
         similarity(conf1, conf2) / 32.0
       end
