@@ -12,6 +12,11 @@ module Draughts
 
       has n, :plays
       has n, :boards, :through => :plays
+
+      def to_s
+        "(#{origin}, #{destination})"
+      end
+
     end
   end
 end
