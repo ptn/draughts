@@ -13,13 +13,15 @@ module Draughts
     # 1) Load a usable board. For a board to be usable, it must have at least
     # Config::TRESHOLD number of known moves. If there is no data available for
     # the requested configuration, use the known board that's most similar to
-    # it. Measure how similar the board loaded is to the board requested with a
+    # it.
+    #
+    # 2) Measure how similar the board loaded is to the board requested with a
     # ratio called the similarity factor.
     #
-    # 2) Choose from the set of untested moves that which has the highest
+    # 3) Choose from the set of untested moves that which has the highest
     # probability of being legal, adjusted with the similarity factor.
     #
-    # Once the move has been played, the register method should be invoked to
+    # Once the move has been played, the learn method should be invoked to
     # record whether the last move was legal or illegal.
     #
     class TrainingBot
@@ -105,7 +107,7 @@ module Draughts
         numerator / denominator * @factor
       end
 
-      def register(result)
+      def learn(result)
       end
 
       private
