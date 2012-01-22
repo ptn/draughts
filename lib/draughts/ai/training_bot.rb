@@ -58,6 +58,10 @@ module Draughts
       #
       # Calculate the probability of a single move being legal.
       #
+      # If the bot is using the same board that it was requested to play
+      # instead of the most similar one, then check if we alread know the
+      # result for this move. If we do, return that.
+      #
       # What needs to be calculated is the probability of a move of being
       # legal, or:
       #
@@ -94,6 +98,13 @@ module Draughts
       # Config::SMOOTHER.
       #
       def probability_of(move)
+        if @factor == 1.0
+          play = move.plays.first :board => @board
+          if play
+            return play.legal? ? 1.0 : 0.0
+          end
+        end
+
         pol = prob_of_origin_being_legal(move.origin)
         pdl = prob_of_dest_being_legal(move.destination)
         pl  = prob_of_legal
