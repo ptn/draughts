@@ -27,9 +27,9 @@ module Draughts
     class TrainingBot
 
       def initialize(conf)
-        @board  = Board.get_this_or_most_alike(conf)
-        @factor = Board.similarity_factor(conf, @board.configuration)
         @conf   = conf
+        @board  = Board.get_this_or_most_alike(@conf)
+        @factor = Board.similarity_factor(conf, @board.configuration)
       end
 
       #
@@ -52,7 +52,7 @@ module Draughts
           end
         end
 
-        best_move
+        @played = best_move
       end
 
       #
@@ -107,7 +107,18 @@ module Draughts
         numerator / denominator * @factor
       end
 
+      #
+      # Register in database whether the played move was legal or illegal.
+      #
+      # Updates the training data with the result of the last move played. This
+      # updates only the data for the configuration request, creating a board
+      # if none matches, and does nothing with the board used for the
+      # calculation of the probabilities.
+      #
       def learn(result)
+        board  = Board.get_or_create(@conf)
+        result = result == :legal
+        Play.create :board => board, :move => @played, :legal => result
       end
 
       private

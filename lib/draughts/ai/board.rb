@@ -71,6 +71,19 @@ module Draughts
       end
 
       #
+      # Find the board in database with configuration +conf+ or create it if
+      # it doesn't exist.
+      #
+      def self.get_or_create(conf)
+        board = self.first :configuration => conf
+        unless board
+          board = self.create :configuration => conf
+        end
+
+        board
+      end
+
+      #
       # Compare two board configurations char by char and return how many chars
       # were different.
       #

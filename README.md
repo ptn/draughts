@@ -17,19 +17,35 @@ initial training data to the ~/.draughts dir.
 **Known issue:** This prints a bunch of warnings that I haven't figured how to 
 quiet yet.
 
-Once inside the irb session, instantiate a bot with the board configuration 
-that he has to play and ask him for the most likely move:
+Once inside the irb session, instantiate a bot with a board configuration:
 
 ```ruby
 # Board configurations follow checkers' standard notation. There are a few 
 # samples in examples/configurations.txt
 bot = Draughts::AI::TrainingBot.new("bbbbbbbbbbbb        wwwwwwwwwwww")
-bot.play # => A Draughts::AI::Move object
 ```
 
-Or ask him for the probability of a move of your chosing of being legal:
+You can ask him for the probability of a move of your chosing of being legal:
 
 ```ruby
 move = Draughts::AI::Move.first :origin => 9, :destination => 14
 bot.probability_of move # => Float number, like 0.801234532
 ```
+ 
+Or ask him to find the most likely move:
+
+```ruby
+puts bot.play # => A Draughts::AI::Move object, which prints as (origin, destination)
+```
+
+Once he has chosen his move, teach him whether he was right or wrong:
+
+```ruby
+# If the move was legal:
+bot.learn :legal
+# If it wasn't:
+bot.learn :illegal
+```
+
+This updates the training data so that the bot can make more informed guesses 
+in the future.
