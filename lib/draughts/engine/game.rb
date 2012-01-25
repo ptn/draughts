@@ -1,9 +1,12 @@
 module Draughts
   module Engine
     class Game
-      def start
+      def initialize
         @board = Board.new
-        @turn = :black
+        @turn  = :black
+      end
+
+      def start
         print_new_game_message
         loop
       end
@@ -59,10 +62,14 @@ module Draughts
       end
 
       def read_origin
-        origin = read_position(:msg => "Which piece would you like to move? Enter it's position: ")
+        origin = read_position(
+          :msg => "Which piece would you like to move? Enter it's position: "
+        )
 
         while @board[origin].nil? || @board[origin].color != @turn
-          origin = read_position(:msg => "It's #{@turn}'s turn, enter the position of a #{@turn} piece: ")
+          origin = read_position(
+            :msg => "Enter the position of a #{@turn} piece: "
+          )
         end
 
         origin
@@ -72,7 +79,9 @@ module Draughts
         dest = read_position(:msg => "Where would you like to move it? ")
 
         while @board[dest]
-          dest = read_position(:msg => "That square is not empty, enter a new destination: ")
+          dest = read_position(
+            :msg => "That square is not empty, enter a new destination: "
+          )
         end
 
         dest
