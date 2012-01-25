@@ -53,7 +53,7 @@ module Draughts
       end
 
       def crowns_in?(pos)
-        pos == 8
+        Utils.index_to_row(pos) == 8
       end
     end
 
@@ -92,15 +92,15 @@ module Draughts
       end
 
       def crowns_in?(pos)
-        pos == 1
+        Utils.index_to_row(pos) == 1
       end
     end
 
     class King < Piece
       def initialize(color)
         @color = color
-        @white_proxy = WhitePiece.new
-        @black_proxy = BlackPiece.new
+        @wrapped_white = WhitePiece.new
+        @wrapped_black = BlackPiece.new
       end
 
       def king?
@@ -112,7 +112,12 @@ module Draughts
       end
 
       def valid_move?(from, to)
-        (@white_proxy.valid_move? from, to) || (@black_proxy.valid_move? from, to)
+        (@wrapped_white.valid_move? from, to) || (@wrapped_black.valid_move? from, to)
+      end
+
+      def valid_jump_destination?(from, to)
+        (@wrapped_white.valid_jump_destination? from, to) ||
+          (@wrapped_black.valid_jump_destination? from, to)
       end
 
       def crowns_in?(pos)
