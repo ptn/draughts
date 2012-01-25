@@ -30,7 +30,7 @@ module Draughts
       end
 
       def count(color)
-        color == :blacks ? blacks_count : whites_count
+        color == :black ? blacks_count : whites_count
       end
 
       def whites_count
