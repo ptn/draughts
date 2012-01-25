@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/draughts'
-Draughts::Engine::Game.new.start
+
+g = Draughts::Engine::Game.new
+g.start

@@ -25,7 +25,7 @@ module Draughts
         if result
           [true, result]
         else
-          [false, "You can't neither capture nor move from #{from} to #{to}"]
+          [false, "YOU CAN'T NEITHER CAPTURE NOR MOVE FROM #{from} TO #{to}"]
         end
       end
 
