@@ -5,8 +5,10 @@ module Draughts
         @pieces = init_pieces
       end
 
-      # Takes an integer in the range (1..32), which is standard notation for
-      # checkers. This encapsulates the underlying Array.
+      #
+      # Takes an integer in the range (1..32) and returns the piece at said
+      # square.
+      #
       def piece_at(pos)
         @pieces[pos - 1]
       end
@@ -41,6 +43,26 @@ module Draughts
         @pieces.count { |p| !p.nil? && p.color == :black }
       end
 
+      #
+      # Sample output:
+      #
+      #   | w |   | w |   | w |   | w | 
+      # --------------------------------
+      # w |   | w |   | w |   | w |   | 
+      # --------------------------------
+      #   | w |   | w |   | w |   | w | 
+      # --------------------------------
+      #   |   |   |   |   |   |   |   | 
+      # --------------------------------
+      #   |   |   |   |   |   |   |   | 
+      # --------------------------------
+      # b |   | b |   | b |   | b |   | 
+      # --------------------------------
+      #   | b |   | b |   | b |   | b | 
+      # --------------------------------
+      # b |   | b |   | b |   | b |   | 
+      # --------------------------------
+      #
       def to_s
         piece_squares = @pieces.reverse
         empty_squares = [" "] * 4
