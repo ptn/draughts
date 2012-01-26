@@ -120,6 +120,30 @@ module Draughts
         similarity(conf1, conf2) / 32.0
       end
 
+      def plays_of_color(color)
+        color == :black ? black_plays : white_plays
+      end
+
+      def black_plays
+        plays :color => "black"
+      end
+
+      def white_plays
+        plays :color => "white"
+      end
+
+      def moves_of_color(color)
+        color == :black ? black_moves : white_moves
+      end
+
+      def black_moves
+        Move.all(Move.plays.color => "black", Move.plays.board_id => self.id)
+      end
+
+      def white_moves
+        Move.all(Move.plays.color => "white", Move.plays.board_id => self.id)
+      end
+
       #
       # Count the number of known legal moves that start from +origin+.
       #
