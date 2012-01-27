@@ -125,11 +125,11 @@ module Draughts
       end
 
       def black_plays
-        plays :color => "black"
+        plays(:color => "black")
       end
 
       def white_plays
-        plays :color => "white"
+        plays(:color => "white")
       end
 
       def moves_of_color(color)
@@ -147,63 +147,65 @@ module Draughts
       #
       # Count the number of known legal moves that start from +origin+.
       #
-      def count_origin_in_legal(origin)
+      def count_origin_in_legal(origin, color)
         moves_from_origin = moves.all(:origin => origin)
-        moves_from_origin.plays.count(:legal => true)
+        moves_from_origin.plays.count(:legal => true, :color => color)
       end
 
       #
       # Count the number of known illegal moves that start from +origin+.
       #
-      def count_origin_in_illegal(origin)
+      def count_origin_in_illegal(origin, color)
         moves_from_origin = moves.all(:origin => origin)
-        moves_from_origin.plays.count(:legal => false)
+        moves_from_origin.plays.count(:legal => false, :color => color)
       end
 
       #
       # Count the number of known legal moves that end in +dest+.
       #
-      def count_destination_in_legal(dest)
+      def count_destination_in_legal(dest, color)
         moves_from_dest = moves.all(:destination => dest)
-        moves_from_dest.plays.count(:legal => true)
+        moves_from_dest.plays.count(:legal => true, :color => color)
       end
 
       #
       # Count the number of known illegal moves that end in +dest+.
       #
-      def count_destination_in_illegal(dest)
+      def count_destination_in_illegal(dest, color)
         moves_from_dest = moves.all(:destination => dest)
-        moves_from_dest.plays.count(:legal => false)
+        moves_from_dest.plays.count(:legal => false, :color => color)
       end
 
       #
       # Counts distinct squares that appear as an origin in a known move.
       #
-      def distinct_origin_count
+      def distinct_origin_count(color)
         query = <<-SQL
-          SELECT distinct(m.origin)
+          SELECT count(distinct(m.origin))
           FROM draughts_ai_moves m
             JOIN draughts_ai_plays p
             ON p.move_id = m.id
-          WHERE board_id = ?
+          WHERE p.board_id = ?
+          AND p.color = ?
         SQL
 
-        repository.adapter.select(query, [id]).count
+        repository.adapter.select(query, id, color).first
       end
 
       #
       # Counts distinct squares that appear as an destination in a known move.
       #
-      def distinct_destination_count
+      def distinct_destination_count(color)
         query = <<-SQL
-          SELECT distinct(m.destination)
+          SELECT count(distinct(m.destination))
           FROM draughts_ai_moves m
             JOIN draughts_ai_plays p
             ON p.move_id = m.id
-          WHERE board_id = ?
+          WHERE p.board_id = ?
+          AND p.color = ?
         SQL
 
-        repository.adapter.select(query, [id]).count
+        repository.adapter.select(query, id, color).first
       end
 
       private

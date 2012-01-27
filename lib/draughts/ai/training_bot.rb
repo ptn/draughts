@@ -25,9 +25,11 @@ module Draughts
     # record whether the last move was legal or illegal.
     #
     class TrainingBot
+      attr_reader :color
 
-      def initialize(conf)
+      def initialize(conf, color)
         @conf   = conf
+        @color  = color.to_s
         @board  = Board.get_this_or_most_alike(@conf)
         @factor = Board.similarity_factor(conf, @board.configuration)
       end
@@ -43,7 +45,7 @@ module Draughts
         best_move = nil
         max       = 0
 
-        untested = Move.all - @board.moves
+        untested = Move.all - @board.moves_of_color(@color)
         untested.each do |ut|
           prob = probability_of(ut)
           if max < prob
@@ -58,9 +60,48 @@ module Draughts
       #
       # Calculate the probability of a single move being legal.
       #
+      # If the requested move starts in a square occupied by an enemy piece,
+      # automatically return a probability of 0.
+      #
       # If the bot is using the same board that it was requested to play
       # instead of the most similar one, then check if we alread know the
       # result for this move. If we do, return that.
+      #
+      # If none of those shortcuts apply, calculate the probability via Bayes
+      # theorem.
+      #
+      def probability_of(move)
+        # Can't move an enemy piece. This is the only rule that the bot knows a
+        # priori.
+        return 0.0 if @board.configuration[move.origin - 1] != @color[0]
+
+        # Directly return the probability of known moves without calculations.
+        if @factor == 1.0
+          play = move.plays.first(:board => @board, :color => @color)
+          if play
+            return play.legal? ? 1.0 : 0.0
+          end
+        end
+
+        bayes(move)
+      end
+
+      #
+      # Register in database whether the played move was legal or illegal.
+      #
+      # Updates the training data with the result of the last move played. This
+      # updates only the data for the configuration requested, creating a board
+      # if none matches, and does nothing with the board used for the
+      # calculation of the probabilities.
+      #
+      def learn(result)
+        board  = Board.get_or_create(@conf)
+        result = result == :legal
+        Play.create :board => board, :move => @played, :legal => result
+      end
+
+      private
+
       #
       # What needs to be calculated is the probability of a move of being
       # legal, or:
@@ -97,14 +138,7 @@ module Draughts
       # probability is calculated using the Laplacian smoother found in
       # Config::SMOOTHER.
       #
-      def probability_of(move)
-        if @factor == 1.0
-          play = move.plays.first :board => @board
-          if play
-            return play.legal? ? 1.0 : 0.0
-          end
-        end
-
+      def bayes(move)
         pol = prob_of_origin_being_legal(move.origin)
         pdl = prob_of_dest_being_legal(move.destination)
         pl  = prob_of_legal
@@ -118,58 +152,42 @@ module Draughts
         numerator / denominator * @factor
       end
 
-      #
-      # Register in database whether the played move was legal or illegal.
-      #
-      # Updates the training data with the result of the last move played. This
-      # updates only the data for the configuration request, creating a board
-      # if none matches, and does nothing with the board used for the
-      # calculation of the probabilities.
-      #
-      def learn(result)
-        board  = Board.get_or_create(@conf)
-        result = result == :legal
-        Play.create :board => board, :move => @played, :legal => result
-      end
-
-      private
-
       def prob_of_origin_being_legal(origin)
-        raw_count      = @board.count_origin_in_legal(origin)
+        raw_count      = @board.count_origin_in_legal(origin, @color)
         smoothed_count = raw_count + Config::SMOOTHER
 
-        smoothed_legals = smoothed :legal => true,
-          :multiplier => @board.distinct_origin_count
+        smoothed_legals = smoothed(:legal => true,
+          :multiplier => @board.distinct_origin_count(@color))
 
         smoothed_count.to_f / smoothed_legals.to_f
       end
 
       def prob_of_dest_being_legal(dest)
-        raw_count      = @board.count_destination_in_legal(dest)
+        raw_count      = @board.count_destination_in_legal(dest, @color)
         smoothed_count = raw_count + Config::SMOOTHER
 
-        smoothed_legals = smoothed :legal => true,
-          :multiplier => @board.distinct_destination_count
+        smoothed_legals = smoothed(:legal => true,
+          :multiplier => @board.distinct_destination_count(@color))
 
         smoothed_count.to_f / smoothed_legals.to_f
       end
 
       def prob_of_origin_being_illegal(origin)
-        raw_count      = @board.count_origin_in_illegal(origin)
+        raw_count      = @board.count_origin_in_illegal(origin, @color)
         smoothed_count = raw_count + Config::SMOOTHER
 
-        smoothed_illegals = smoothed :legal => false,
-          :multiplier => @board.distinct_origin_count
+        smoothed_illegals = smoothed(:legal => false,
+          :multiplier => @board.distinct_origin_count(@color))
 
         smoothed_count.to_f / smoothed_illegals.to_f
       end
 
       def prob_of_dest_being_illegal(dest)
-        raw_count      = @board.count_destination_in_illegal(dest)
+        raw_count      = @board.count_destination_in_illegal(dest, @color)
         smoothed_count = raw_count + Config::SMOOTHER
 
-        smoothed_illegals = smoothed :legal => false,
-          :multiplier => @board.distinct_destination_count
+        smoothed_illegals = smoothed(:legal => false,
+          :multiplier => @board.distinct_destination_count(@color))
 
         smoothed_count.to_f / smoothed_illegals.to_f
       end
