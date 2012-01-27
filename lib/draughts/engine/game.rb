@@ -84,13 +84,15 @@ module Draughts
       end
 
       def validate_input(raw)
-        msg = "Invalid move: "
+        msg = "Invalid: "
 
         case
           when raw.length != 2
             msg += "input 2 numbers"
           when raw.any? { |coord| !(1..32).include? coord }
             msg += "numbers must be in the range from 1 to 32"
+          when @board[raw[0]].nil?
+            msg += "no piece at square #{raw[0]}"
           when @board[raw[0]].color != @turn
             msg += "the piece in square #{raw[0]} is not #{@turn}"
           else
