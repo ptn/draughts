@@ -40,10 +40,12 @@ module Draughts
         #TODO Check if the player has available moves, terminate if not.
         while @board.count(@turn) > 0
           origin, dest = read_input
-          result, msg = @board.play(origin, dest)
+          result = @board.play(origin, dest)
 
-          puts "\n\n#{msg.upcase}\n\n"
-          unless result
+          if result.success
+            puts "\n\nOK: #{result.msg.upcase}\n\n"
+          else
+            puts "\n\nINVALID: #{result.msg.upcase}\n\n"
             redo
           end
 

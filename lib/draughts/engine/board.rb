@@ -1,6 +1,9 @@
 module Draughts
   module Engine
     class Board
+
+      PlayResult = Struct.new :msg, :success
+
       def initialize
         @pieces = init_pieces
       end
@@ -19,16 +22,18 @@ module Draughts
       # Tries to move the piece at +from+ to square +to+. Returns a log of
       # consequences (capturing, crowning, etc.) or an explanation of the error.
       def play(from, to)
-        return false if @pieces[to - 1]
-        return false unless @pieces[from - 1]
+        return PlayResult.new("square #{to} is not empty") if @pieces[to - 1]
+        return PlayResult.new("no piece at square #{from}") unless @pieces[from - 1]
 
-        # Move and jump return false on failure and output messages on success.
+        # Move and jump return nil on failure and an instance of PlayResult
+        # on success.
         result = move(from, to) || jump(from, to)
-        if result
-          [true, result]
-        else
-          [false, "YOU CAN'T NEITHER CAPTURE NOR MOVE FROM #{from} TO #{to}"]
+        unless result
+          msg = "can't neither capture nor move from #{from} to #{to}"
+          result = PlayResult.new(msg)
         end
+
+        result
       end
 
       def count(color)
@@ -111,28 +116,39 @@ module Draughts
       def jump(from, to)
         jumping = @pieces[from - 1]
 
-        check  = jumping.valid_jump_destination? from, to
+        check = jumping.valid_jump_destination? from, to
         return unless check
 
         target = @pieces[check - 1]
         valid  = (!target.nil? && target.color != jumping.color)
         return unless valid
 
-        move_result = perform_move(from, to)
+        # Capture enemy piece.
         @pieces[check - 1] = nil
-        "#{move_result}; CAPTURED ENEMY ON #{check}"
+
+        result = perform_move(from, to)
+        result.msg += "captured enemy on #{check}"
+        result
       end
 
       def perform_move(from, to)
+        # move and jump invoke this method only when it's certain that the move
+        # is valid.
+        result = PlayResult.new
+        result.success = true
+
         moving = @pieces[from - 1]
         @pieces[from - 1] = nil
+
         if moving.crowns_in? to
           @pieces[to - 1] = moving.crowned
-          "CROWNED"
+          result.msg = "crowned"
         else
           @pieces[to - 1] = moving
-          "MOVED"
+          result.msg = "moved"
         end
+
+        result
       end
     end
   end
