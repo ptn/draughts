@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/draughts'
+require_relative '../lib/draughts/engine/interfaces/text_interface'
 
-g = Draughts::Engine::Game.new
-g.start
+cli = Draughts::Engine::Interfaces::TextInterface.new
+cli.start_game

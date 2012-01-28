@@ -1,9 +1,6 @@
 module Draughts
   module Engine
     class Board
-
-      PlayResult = Struct.new :msg, :success
-
       def initialize
         @pieces = init_pieces
       end
@@ -127,7 +124,7 @@ module Draughts
         @pieces[check - 1] = nil
 
         result = perform_move(from, to)
-        result.msg += "captured enemy on #{check}"
+        result.msg = "captured enemy on #{check}"
         result
       end
 

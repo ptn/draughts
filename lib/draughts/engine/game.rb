@@ -1,106 +1,57 @@
 module Draughts
   module Engine
     class Game
+      attr_accessor :turn
+
       def initialize
-        @board = Board.new
-        @turn  = :black
+        @board   = Board.new
+        @turn    = :black
+        @finished = false
       end
 
-      def start
-        print_new_game_message
-        loop
+      #TODO Check if the player has available moves, terminate if not.
+      def play(orig, dest)
+        return if @finished
+
+        error_msg = validate_input(orig, dest)
+        return PlayResult.new(error_msg) if error_msg
+
+        result = @board.play(orig, dest)
+        if result.success
+          next_turn
+          if @board.count(@turn) == 0
+            result.ends_game = true
+            @finished = true
+          end
+        end
+        result
       end
 
-      def print_result
-        next_turn
-        puts "#{@turn}s wins!"
-      end
-
-      def print_new_game_message
-        puts <<-MSG
-
-          Game starting.
-
-          Standard notation is used for entering moves:
-          The black squares are labeled from 1 to 32 starting
-          in the bottom right and ending in the top left.
-          These are the numbers you have to input to make moves.
-          Some examples:
-
-          black> 9 14
-          white> 21 17
-          black> 14 21
-        MSG
-        puts
+      def to_s
+        @board.to_s
       end
 
       private
-
-      def loop
-        #TODO Check if the player has available moves, terminate if not.
-        while @board.count(@turn) > 0
-          origin, dest = read_input
-          result = @board.play(origin, dest)
-
-          if result.success
-            puts "\n\nOK: #{result.msg.upcase}\n\n"
-          else
-            puts "\n\nINVALID: #{result.msg.upcase}\n\n"
-            redo
-          end
-
-          next_turn
-        end
-
-        print_result
-      end
-
-      def ask_input(msg="")
-        puts
-        puts "--------------------------------"
-        puts
-        puts msg.upcase
-        puts
-        puts @board
-        puts
-        print "#{@turn.to_s}> "
-      end
 
       def next_turn
         @turn = @turn == :black ? :white : :black
       end
 
-      # ugly?
-      def read_input
-        ask_input
-        raw = gets.chomp.split.map &:to_i
-
-        while (error_msg = validate_input(raw))
-          ask_input(error_msg)
-          raw = gets.chomp.split.map &:to_i
-        end
-
-        raw
-      end
-
-      def validate_input(raw)
-        msg = "Invalid: "
-
+      def validate_input(orig, dest)
         case
-          when raw.length != 2
-            msg += "input 2 numbers"
-          when raw.any? { |coord| !(1..32).include? coord }
-            msg += "numbers must be in the range from 1 to 32"
-          when @board[raw[0]].nil?
-            msg += "no piece at square #{raw[0]}"
-          when @board[raw[0]].color != @turn
-            msg += "the piece in square #{raw[0]} is not #{@turn}"
-          else
-            msg = nil
+        when !((1..32).include? orig) || !((1..32).include? dest)
+          msg = "numbers must be in the range from 1 to 32"
+        when @board[orig].nil?
+          msg = "no piece at square #{orig}"
+        when @board[orig].color != @turn
+          msg = "the piece in square #{orig} is not #{@turn}"
+        else
+          msg = nil
         end
 
         msg
       end
+
     end
   end
 end
