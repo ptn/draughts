@@ -121,7 +121,7 @@ module Draughts
       end
 
       def plays_of_color(color)
-        color == :black ? black_plays : white_plays
+        color == "black" ? black_plays : white_plays
       end
 
       def black_plays
@@ -133,15 +133,15 @@ module Draughts
       end
 
       def moves_of_color(color)
-        color == :black ? black_moves : white_moves
+        color == "black" ? black_moves : white_moves
       end
 
       def black_moves
-        Move.all(Move.plays.color => "black", Move.plays.board_id => self.id)
+        moves.all(Move.plays.color => "black", Move.plays.board_id => self.id)
       end
 
       def white_moves
-        Move.all(Move.plays.color => "white", Move.plays.board_id => self.id)
+        moves.all(Move.plays.color => "white", Move.plays.board_id => self.id)
       end
 
       #
