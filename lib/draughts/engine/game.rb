@@ -31,6 +31,10 @@ module Draughts
         @board.to_s
       end
 
+      def standard_notation
+        @board.standard_notation
+      end
+
       private
 
       def next_turn

@@ -1,0 +1,45 @@
+#! /usr/bin/env ruby
+
+require_relative '../lib/draughts'
+require_relative '../lib/draughts/ai/setup'
+require_relative '../lib/draughts/ai/training_bot'
+
+game = Draughts::Engine::Game.new
+players = [
+  Draughts::AI::TrainingBot.new(:black, game.standard_notation),
+  Draughts::AI::TrainingBot.new(:white, game.standard_notation),
+]
+
+puts "Using bots: #{players[0].inspect} and #{players[1].inspect}"
+
+puts "Starting game..."
+
+loop do
+  player = players.shift
+  puts "It's #{player.color}'s turn"
+  gets
+
+  move = player.play
+  puts "#{player.color} played #{move}"
+  gets
+
+  result = game.play(move.origin, move.destination)
+  player.learn(result.success)
+  puts "#{move} was #{result.success ? "" : "not"} legal. Learned."
+  gets
+
+  if result.success
+    players.push(player)
+  else
+    players.unshift(player)
+  end
+
+  puts "Board is now:"
+  puts
+  puts game
+  gets
+
+  break if result.ends_game
+end
+
+puts "#{players.last.color} won!"

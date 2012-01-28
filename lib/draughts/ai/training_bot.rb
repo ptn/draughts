@@ -27,7 +27,7 @@ module Draughts
     class TrainingBot
       attr_reader :color
 
-      def initialize(conf, color)
+      def initialize(color, conf)
         @conf   = conf
         @color  = color.to_s
         @board  = Board.get_this_or_most_alike(@conf)
@@ -96,7 +96,6 @@ module Draughts
       #
       def learn(result)
         board  = Board.get_or_create(@conf)
-        result = result == :legal
         Play.create :board => board, :move => @played, :legal => result
       end
 

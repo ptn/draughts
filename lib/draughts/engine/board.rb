@@ -15,6 +15,9 @@ module Draughts
 
       alias :[] :piece_at
 
+      def standard_notation
+        @pieces.map { |p| p.nil? ? " " : p.color.to_s[0] }.join
+      end
 
       # Tries to move the piece at +from+ to square +to+. Returns a log of
       # consequences (capturing, crowning, etc.) or an explanation of the error.
