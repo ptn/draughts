@@ -29,6 +29,7 @@ module Draughts
 
       # Bots by default play the starting configuration of a board.
       def initialize(color, conf="bbbbbbbbbbbb        wwwwwwwwwwww")
+        @must_learn = true
         @color  = color.to_s
         set_conf(conf)
       end
@@ -37,27 +38,10 @@ module Draughts
         set_conf(conf)
       end
 
-      #
-      # Find the move that's most likely to be legal.
-      #
-      # Based on the results of Bayes theorem applied to the training data,
-      # chooses the move that has the highest probability of being legal in the
-      # current board configuration.
-      #
+      # Determine what move to play next.
       def play
-        best_move = nil
-        max       = 0
-
         untested = Move.all - @board.moves_of_color(@color)
-        untested.each do |ut|
-          prob = probability_of(ut)
-          if max < prob
-            max = prob
-            best_move = ut
-          end
-        end
-
-        @played = best_move
+        untested.empty? ? random_play : most_likely_play(untested)
       end
 
       #
@@ -98,11 +82,43 @@ module Draughts
       # calculation of the probabilities.
       #
       def learn(result)
+        return false unless @must_learn
+
         board = Board.get_or_create(@conf)
-        play = Play.create(board: board, move: @played, legal: result, color: @color)
+        Play.create(board: board, move: @played, legal: result, color: @color)
+
+        @must_learn = true
       end
 
       private
+
+      def random_play
+        @must_learn = false
+        @board.plays(color: @color, legal: true).sample.move
+      end
+
+      #
+      # Find the move that's most likely to be legal.
+      #
+      # Based on the results of Bayes theorem applied to the training data,
+      # chooses the move that has the highest probability of being legal in the
+      # current board configuration.
+      #
+      def most_likely_play(untested)
+        best_move = nil
+        max       = 0
+
+        untested.each do |ut|
+          prob = probability_of(ut)
+          if max < prob
+            max = prob
+            best_move = ut
+          end
+        end
+
+        @played = best_move
+      end
+
 
       def set_conf(conf)
         @conf   = conf
