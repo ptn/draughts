@@ -6,15 +6,15 @@ require_relative '../lib/draughts/ai/training_bot'
 
 game = Draughts::Engine::Game.new
 players = [
-  Draughts::AI::TrainingBot.new(:black, game.standard_notation),
-  Draughts::AI::TrainingBot.new(:white, game.standard_notation),
+  Draughts::AI::TrainingBot.new(:black),
+  Draughts::AI::TrainingBot.new(:white),
 ]
-
-puts "Using bots: #{players[0].inspect} and #{players[1].inspect}"
 
 puts "Starting game..."
 
 loop do
+  players.each { |p| p.configuration = game.standard_notation }
+
   player = players.shift
   puts "It's #{player.color}'s turn"
   gets

@@ -27,11 +27,14 @@ module Draughts
     class TrainingBot
       attr_reader :color
 
-      def initialize(color, conf)
-        @conf   = conf
+      # Bots by default play the starting configuration of a board.
+      def initialize(color, conf="bbbbbbbbbbbb        wwwwwwwwwwww")
         @color  = color.to_s
-        @board  = Board.get_this_or_most_alike(@conf)
-        @factor = Board.similarity_factor(conf, @board.configuration)
+        set_conf(conf)
+      end
+
+      def configuration=(conf)
+        set_conf(conf)
       end
 
       #
@@ -100,6 +103,12 @@ module Draughts
       end
 
       private
+
+      def set_conf(conf)
+        @conf   = conf
+        @board  = Board.get_this_or_most_alike(@conf)
+        @factor = Board.similarity_factor(conf, @board.configuration)
+      end
 
       #
       # What needs to be calculated is the probability of a move of being
