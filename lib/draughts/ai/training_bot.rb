@@ -98,8 +98,8 @@ module Draughts
       # calculation of the probabilities.
       #
       def learn(result)
-        board  = Board.get_or_create(@conf)
-        Play.create :board => board, :move => @played, :legal => result
+        board = Board.get_or_create(@conf)
+        play = Play.create(board: board, move: @played, legal: result, color: @color)
       end
 
       private
