@@ -1,8 +1,29 @@
 #! /usr/bin/env ruby
 
+require 'optparse'
+
 require_relative '../lib/draughts'
 require_relative '../lib/draughts/ai/setup'
 require_relative '../lib/draughts/ai/training_bot'
+
+$quiet = false
+parser = OptionParser.new
+parser.on("-q") { $quiet = true }
+parser.parse(ARGV)
+ARGV.clear
+
+def log(msg)
+  return if $quiet
+  puts msg
+  gets
+end
+
+def print_board(game)
+  puts "Board is now:"
+  puts
+  puts game
+  puts
+end
 
 game = Draughts::Engine::Game.new
 players = [
@@ -16,17 +37,16 @@ loop do
   players.each { |p| p.configuration = game.standard_notation }
 
   player = players.shift
-  puts "It's #{player.color}'s turn"
-  gets
+
+  log "It's #{player.color}'s turn"
 
   move = player.play
-  puts "#{player.color} played #{move} with probability #{player.probability_of(move)}"
-  gets
+  log "#{player.color} played #{move} with probability #{player.probability_of(move)}"
 
   result = game.play(move.origin, move.destination)
   player.learn(result.success)
-  puts "#{move} was #{result.success ? "" : "not"} legal. Learned."
-  gets
+
+  log "#{move} was #{result.success ? "" : "not"} legal. Learned."
 
   if result.success
     players.push(player)
@@ -34,10 +54,7 @@ loop do
     players.unshift(player)
   end
 
-  puts "Board is now:"
-  puts
-  puts game
-  puts
+  print_board(game)
 
   break if result.ends_game
 end
