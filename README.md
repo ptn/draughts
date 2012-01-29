@@ -42,9 +42,9 @@ Once he has chosen his move, teach him whether he was right or wrong:
 
 ```ruby
 # If the move was legal:
-bot.learn :legal
+bot.learn true
 # If it wasn't:
-bot.learn :illegal
+bot.learn false
 ```
 
 This updates the training data so that the bot can make more informed guesses 
