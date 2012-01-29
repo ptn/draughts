@@ -7,22 +7,26 @@ require_relative '../lib/draughts/ai/setup'
 require_relative '../lib/draughts/ai/training_bot'
 
 $quiet = false
+$pause = false
+logfile = nil
 parser = OptionParser.new
+parser.on("-p") { $pause = true }
 parser.on("-q") { $quiet = true }
+parser.on("--output=FILE") { |file| logfile = file }
 parser.parse(ARGV)
 ARGV.clear
+$log = logfile ? File.open(File.expand_path(logfile), "a") : $stdout
 
-def log(msg)
+def log(msg="")
   return if $quiet
-  puts msg
-  gets
+  $log.write(msg)
+  $log.write("\n")
+  $log.flush
+  gets if $log == $stdout && $pause
 end
 
-def print_board(game)
-  puts "Board is now:"
-  puts
-  puts game
-  puts
+def log_board(game)
+  log "Board is now:\n\n" + game.to_s
 end
 
 game = Draughts::Engine::Game.new
@@ -54,9 +58,10 @@ loop do
     players.unshift(player)
   end
 
-  print_board(game)
+  log_board(game)
 
   break if result.ends_game
 end
 
 puts "#{players.last.color} won!"
+$log.close
