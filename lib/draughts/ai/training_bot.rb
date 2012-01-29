@@ -40,7 +40,8 @@ module Draughts
 
       # Determine what move to play next.
       def play
-        untested = Move.all - @board.moves_of_color(@color)
+        untested = (Move.all - @board.moves_of_color(@color)).to_a
+        untested = untested - @real_board.plays.all(color: @color).map(&:move)
         untested.empty? ? random_play : most_likely_play(untested)
       end
 
@@ -83,9 +84,12 @@ module Draughts
       #
       def learn(result)
         return false unless @must_learn
-
-        board = Board.get_or_create(@conf)
-        Play.create(board: board, move: @played, legal: result, color: @color)
+        Play.create(
+          board: @real_board,
+          move:  @played,
+          legal: result,
+          color: @color
+        )
       end
 
       private
@@ -122,6 +126,7 @@ module Draughts
       def set_conf(conf)
         @conf   = conf
         @board  = Board.get_this_or_most_alike(@conf)
+        @real_board = Board.get_or_create(@conf)
         @factor = Board.similarity_factor(conf, @board.configuration)
       end
 
