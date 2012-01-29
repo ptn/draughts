@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
 
-require 'irb'
+require 'pry'
 
 dir = File.expand_path("~/.draughts/")
 unless File.directory? dir
@@ -22,12 +22,7 @@ unless File.exists? db
   puts "done."
 end
 
-IRB.setup nil
-
-IRB.load_modules << "./lib/draughts.rb"
-IRB.load_modules << "./lib/draughts/ai/setup.rb"
-IRB.load_modules << "./lib/draughts/ai/training_bot.rb"
-puts "LOG: Loading modules:"
-puts IRB.load_modules
-
-IRB.start
+require_relative "../lib/draughts"
+require_relative "../lib/draughts/ai/setup"
+require_relative "../lib/draughts/ai/training_bot"
+binding.pry
