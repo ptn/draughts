@@ -22,15 +22,22 @@ module Draughts
       # Tries to move the piece at +from+ to square +to+. Returns a log of
       # consequences (capturing, crowning, etc.) or an explanation of the error.
       def play(from, to)
-        return PlayResult.new("square #{to} is not empty") if @pieces[to - 1]
-        return PlayResult.new("no piece at square #{from}") unless @pieces[from - 1]
+        if @pieces[to - 1]
+          msg = "square #{to} is not empty"
+          return PlayResult.new(msg, false)
+        end
+
+        unless @pieces[from - 1]
+          msg = "no piece at square #{from}"
+          return PlayResult.new(msg, false)
+        end
 
         # Move and jump return nil on failure and an instance of PlayResult
         # on success.
         result = move(from, to) || jump(from, to)
         unless result
           msg = "can't neither capture nor move from #{from} to #{to}"
-          result = PlayResult.new(msg)
+          result = PlayResult.new(msg, false)
         end
 
         result

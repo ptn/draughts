@@ -45,7 +45,7 @@ loop do
   log "It's #{player.color}'s turn"
 
   move = player.play
-  log "#{player.color} played #{move} with probability #{player.probability_of(move)}"
+  log "#{player.color} played #{move}"
 
   result = game.play(move.origin, move.destination)
   player.learn(result.success)

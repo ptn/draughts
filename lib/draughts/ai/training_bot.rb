@@ -104,7 +104,7 @@ module Draughts
       #
       def most_likely_play(untested)
         best_move = nil
-        max       = 0
+        max = 0
 
         untested.each do |ut|
           prob = probability_of(ut)
@@ -236,7 +236,7 @@ module Draughts
       end
 
       def smoothed(opts)
-        count    = @board.plays.count(:legal => opts[:legal])
+        count = @board.plays.count(:legal => opts[:legal])
         count + Config::SMOOTHER * opts[:multiplier]
       end
     end
