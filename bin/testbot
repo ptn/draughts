@@ -2,26 +2,6 @@
 
 require 'pry'
 
-dir = File.expand_path("~/.draughts/")
-unless File.directory? dir
-  print "LOG: ~/.draughts dir does not exist, creating..."
-  Dir.mkdir dir
-  puts "done."
-end
-
-db = File.expand_path("~/.draughts/draughts.db")
-unless File.exists? db
-  print "LOG: Database not in directory, copying..."
-
-  sample = File.expand_path("examples/draughts.db.example")
-  target = File.expand_path("~/.draughts/draughts.db")
-
-  require 'fileutils'
-  FileUtils.cp(sample, target)
-
-  puts "done."
-end
-
 require_relative "../lib/draughts"
 require_relative "../lib/draughts/ai/setup"
 require_relative "../lib/draughts/ai/training_bot"
