@@ -86,14 +86,12 @@ module Draughts
 
         board = Board.get_or_create(@conf)
         Play.create(board: board, move: @played, legal: result, color: @color)
-
-        @must_learn = true
       end
 
       private
 
       def random_play
-        @must_learn = false
+        @must_learn = @board.configuration != @conf
         @board.plays(color: @color, legal: true).sample.move
       end
 
@@ -116,6 +114,7 @@ module Draughts
           end
         end
 
+        @must_learn = true
         @played = best_move
       end
 
