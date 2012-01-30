@@ -3,7 +3,8 @@ module Draughts
     module Config
       TRESHOLD = 5
       SMOOTHER = 1
-      DBDIR    = "examples"
+      DB_DIR   = "examples"
+      DB_DEBUG = false
     end
   end
 end
