@@ -3,7 +3,7 @@ module Draughts
     module Config
       THRESHOLD = 5
       SMOOTHER = 1
-      DB_DIR   = "examples"
+	  DB_DIR   = "data"
       DB_NAME  = "draughts.db"
       DB_LOG   = "db.log"
       DB_DEBUG = false

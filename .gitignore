@@ -4,5 +4,5 @@ Gemfile.lock
 .*.swp
 .*.swo
 config/bots.rb
-examples/db.log
-examples/draughts.db
+data/db.log
+data/draughts.db
