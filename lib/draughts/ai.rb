@@ -5,3 +5,5 @@ require_relative 'ai/play'
 
 DataMapper.finalize
 DataMapper.auto_upgrade!
+
+require_relative 'ai/training_bot'

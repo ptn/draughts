@@ -3,6 +3,4 @@
 require 'pry'
 
 require_relative "../lib/draughts"
-require_relative "../lib/draughts/ai"
-require_relative "../lib/draughts/ai/training_bot"
 binding.pry
