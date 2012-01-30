@@ -5,10 +5,10 @@ module Draughts
     base = File.expand_path(Config::DB_DIR)
 
     if Config::DB_DEBUG
-      logfile = File.join(base, 'db.log')
+      logfile = File.join(base, Config::DB_LOG)
       DataMapper::Logger.new(logfile, :debug)
     end
 
-    DataMapper.setup(:default, 'sqlite://' + File.join(base,'draughts.db'))
+    DataMapper.setup(:default, 'sqlite://' + File.join(base, Config::DB_NAME))
   end
 end
