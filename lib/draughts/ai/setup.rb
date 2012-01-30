@@ -1,5 +1,4 @@
 require 'data_mapper'
-require_relative '../../../config/bots'
 
 module Draughts
   module AI

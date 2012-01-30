@@ -1,5 +1,6 @@
 require 'optparse'
 
+require_relative '../../../config/bots'
 require_relative '../../draughts'
 
 module Draughts

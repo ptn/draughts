@@ -2,5 +2,7 @@
 
 require 'pry'
 
-require_relative "../lib/draughts"
+require_relative '../config/bots'
+require_relative '../lib/draughts'
+
 binding.pry
