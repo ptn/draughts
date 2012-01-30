@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage        = 'http://github.com/ptn/draughts'
 
   s.files           = Dir.glob("{bin,lib}/**/*") + %w(README.md)
-  s.executables     = ['draughts', 'trainer', 'testbot'] 
+  s.executables     = ['draughts', 'draughts-trainer', 'draughts-testbot'] 
   s.require_path    = 'lib'
 
   s.add_dependency  "dm-sqlite-adapter"

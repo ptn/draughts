@@ -12,13 +12,13 @@ a game between 2 bots.
 
 ### Setup
 
-1. Copy examples/draughts.db.example to examples/draughts.db
+1. Copy data/draughts.db.example to data/draughts.db
 2. Copy config/bots.rb.exmample to config/bots.rb
 
 ### Testing the training bot
 
-Simply give bin/testbot execution permissions (`chmod +x bin/testbot`) and run 
-it.
+Simply give bin/draughts-testbot execution permissions (`chmod +x bin/testbot`) 
+and run it.
 
 Once inside the pry session, instantiate a bot with a board configuration:
 
@@ -55,8 +55,9 @@ in the future.
 
 ### Starting a game between 2 bots
 
-Give bin/trainer execution permissions (`chmod +x bin/trainer`) and run it. The 
-game between the 2 bots will be narrated to you. Watch them FIGHT TO THE DEATH!
+Give bin/draughts-trainer execution permissions (`chmod +x bin/trainer`) and 
+run it.  The game between the 2 bots will be narrated to you. Watch them FIGHT 
+TO THE DEATH!
 
 There's a couple of switches you can use:
 
