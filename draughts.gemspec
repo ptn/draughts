@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.executables     = ['draughts', 'trainer', 'testbot'] 
   s.require_path    = 'lib'
 
+  s.add_dependency  "dm-sqlite-adapter"
   s.add_dependency  "data_mapper"
   s.add_dependency  "pry"
 end
