@@ -9,7 +9,7 @@ module Draughts
     # legal, according to the following algorithm:
     #
     # 1) Load a usable board. For a board to be usable, it must have at least
-    # Config::TRESHOLD number of known moves. If there is no data available for
+    # Config::THRESHOLD number of known moves. If there is no data available for
     # the requested configuration, use the known board that's most similar to
     # it.
     #

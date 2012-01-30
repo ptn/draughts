@@ -56,7 +56,7 @@ module Draughts
       #
       def self.get_this_or_most_alike(conf)
         #TODO Optimize
-        boards = Board.all.select { |b| b.plays.count >= Config::TRESHOLD }
+        boards = Board.all.select { |b| b.plays.count >= Config::THRESHOLD }
 
         return if boards.count == 0
 

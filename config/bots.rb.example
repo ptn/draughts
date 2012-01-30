@@ -1,7 +1,7 @@
 module Draughts
   module AI
     module Config
-      TRESHOLD = 5
+      THRESHOLD = 5
       SMOOTHER = 1
       DB_DIR   = "examples"
       DB_DEBUG = false
