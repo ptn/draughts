@@ -80,12 +80,9 @@ module Draughts
       #
       def learn(result)
         return false unless @must_learn
-        Play.create(
-          board: @real_board,
-          move:  @played,
-          legal: result,
-          color: @color
-        )
+        play = Play.get_or_create(@real_board, @played, @color)
+        play.legal = result
+        play.save
       end
 
       private
