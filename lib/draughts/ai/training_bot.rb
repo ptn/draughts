@@ -38,7 +38,7 @@ module Draughts
 
       # Determine what move to play next.
       def play
-        untested_moves.empty? ? random_play : most_likely_play
+        knows_legals? ? random_play : most_likely_play
       end
 
       #
@@ -89,6 +89,10 @@ module Draughts
       end
 
       private
+
+      def knows_legals?
+        @board.plays.count(color: @color, legal: true) > 0
+      end
 
       def starts_in_color?(move)
         @board.configuration[move.origin - 1] == @color[0]
