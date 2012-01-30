@@ -3,7 +3,7 @@
 require 'optparse'
 
 require_relative '../lib/draughts'
-require_relative '../lib/draughts/ai/setup'
+require_relative '../lib/draughts/ai'
 require_relative '../lib/draughts/ai/training_bot'
 
 $quiet = false

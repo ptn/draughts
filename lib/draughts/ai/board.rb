@@ -1,5 +1,3 @@
-require_relative '../../../config/bots'
-
 module Draughts
   module AI
     #

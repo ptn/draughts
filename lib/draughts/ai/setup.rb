@@ -8,10 +8,3 @@ module Draughts
     DataMapper.setup(:default, 'sqlite://' + File.join(base,'draughts.db'))
   end
 end
-
-require_relative 'board'
-require_relative 'move'
-require_relative 'play'
-
-DataMapper.finalize
-DataMapper.auto_upgrade!
