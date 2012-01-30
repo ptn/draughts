@@ -6,18 +6,21 @@ The Engine module is a human-vs-human CLI program. Users input their moves in
 [standard notation](http://en.wikipedia.org/wiki/English_draughts#Notation).
 
 The AI module contains a machine learning bot that does Bayes classification to 
-determine how likely a move is to be legal in the current board.
+determine how likely a move is to be legal in the current board. It is possible 
+to test the bot directly in an irb-like session (which uses pry) or to start 
+a game between 2 bots.
+
+### Setup
+
+1. Copy examples/draughts.db.example to examples/draughts.db
+2. Copy config/bots.rb.exmample to config/bots.rb
 
 ### Testing the training bot
 
-Simply give bin/testbot execution permissions (chmod +x bin/testbot) and run 
-it. If you don't already have it, this will copy the sqlite database with 
-initial training data to the ~/.draughts dir.
+Simply give bin/testbot execution permissions (`chmod +x bin/testbot`) and run 
+it.
 
-**Known issue:** This prints a bunch of warnings that I haven't figured how to 
-quiet yet.
-
-Once inside the irb session, instantiate a bot with a board configuration:
+Once inside the pry session, instantiate a bot with a board configuration:
 
 ```ruby
 # Board configurations follow checkers' standard notation. There are a few 
@@ -49,3 +52,20 @@ bot.learn false
 
 This updates the training data so that the bot can make more informed guesses 
 in the future.
+
+### Starting a game between 2 bots
+
+Give bin/trainer execution permissions (`chmod +x bin/trainer`) and run it. The 
+game between the 2 bots will be narrated to you. Watch them FIGHT TO THE DEATH!
+
+There's a couple of switches you can use:
+
+* If you want to take your time to read what the program is printing, pass the 
+  `-p` switch. This requires you to type Enter after everything that's printed 
+before continuing.
+
+* If you don't want any output whatsoever (maybe you want to keep the program 
+  running to build your database), pass the `-q` switch.
+
+* If you want to save the output to review it later, use the `--output=FILE` 
+  switch.
