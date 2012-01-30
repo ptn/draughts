@@ -20,9 +20,6 @@ module Draughts
         log_board(@game)
 
         loop do
-          # Tell the bots what board they have to play.
-          @players.each { |p| p.configuration = @game.standard_notation }
-
           current_player = @players.shift
           log "It's #{current_player.color}'s turn"
 
@@ -35,6 +32,8 @@ module Draughts
 
           if result.success
             @players.push(current_player)
+            # Tell the bots what board they have to play.
+            @players.each { |p| p.configuration = @game.standard_notation }
           else
             @players.unshift(current_player)
           end

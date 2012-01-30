@@ -38,9 +38,7 @@ module Draughts
 
       # Determine what move to play next.
       def play
-        untested = (Move.all - @board.moves_of_color(@color)).to_a
-        untested = untested - @real_board.plays.all(color: @color).map(&:move)
-        untested.empty? ? random_play : most_likely_play(untested)
+        untested_moves.empty? ? random_play : most_likely_play
       end
 
       #
@@ -59,7 +57,7 @@ module Draughts
       def probability_of(move)
         # Can't move an enemy piece. This is the only rule that the bot knows a
         # priori.
-        return 0.0 if @board.configuration[move.origin - 1] != @color[0]
+        return 0.0 unless starts_in_color? move
 
         # Directly return the probability of known moves without calculations.
         if @factor == 1.0
@@ -92,6 +90,16 @@ module Draughts
 
       private
 
+      def starts_in_color?(move)
+        @board.configuration[move.origin - 1] == @color[0]
+      end
+
+      def untested_moves
+        untested = (Move.all - @board.moves_of_color(@color)).to_a
+        untested = untested - @real_board.plays.all(color: @color).map(&:move)
+        untested.select { |ut| starts_in_color? ut }
+      end
+
       def random_play
         @must_learn = @board.configuration != @conf
         @board.plays(color: @color, legal: true).sample.move
@@ -104,11 +112,11 @@ module Draughts
       # chooses the move that has the highest probability of being legal in the
       # current board configuration.
       #
-      def most_likely_play(untested)
+      def most_likely_play
         best_move = nil
         max = 0
 
-        untested.each do |ut|
+        untested_moves.each do |ut|
           prob = probability_of(ut)
           if max < prob
             max = prob
