@@ -32,11 +32,12 @@ module Draughts
 
           if result.success
             @players.push(current_player)
-            # Tell the bots what board they have to play.
-            @players.each { |p| p.configuration = @game.standard_notation }
           else
             @players.unshift(current_player)
           end
+
+          # Tell the bots what board they have to play.
+          @players.each { |p| p.configuration = @game.standard_notation }
 
           break if result.ends_game
           log_board(@game)
