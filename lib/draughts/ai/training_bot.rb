@@ -88,7 +88,7 @@ module Draughts
       private
 
       def knows_legals?
-        @board.plays.count(color: @color, legal: true) > 0
+        @real_board.plays.count(color: @color, legal: true) > 0
       end
 
       def starts_in_color?(move)
@@ -102,8 +102,8 @@ module Draughts
       end
 
       def random_play
-        @must_learn = @board.configuration != @conf
-        @played = @board.plays(color: @color, legal: true).sample.move
+        @must_learn = false
+        @played = @real_board.plays(color: @color, legal: true).sample.move
       end
 
       #
