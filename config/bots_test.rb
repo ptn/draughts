@@ -1,7 +1,8 @@
 module Draughts
   module AI
     module Config
-      THRESHOLD = 0
+      BOARD_THRESHOLD = 0
+      PROBS_THRESHOLD = 0.6
       SMOOTHER = 1
       DB_DIR   = "data"
       DB_NAME  = "draughts_test.db"

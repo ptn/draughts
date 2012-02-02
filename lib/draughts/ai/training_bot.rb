@@ -9,9 +9,9 @@ module Draughts
     # legal, according to the following algorithm:
     #
     # 1) Load a usable board. For a board to be usable, it must have at least
-    # Config::THRESHOLD number of known moves. If there is no data available for
-    # the requested configuration, use the known board that's most similar to
-    # it.
+    # Config::BOARD_THRESHOLD number of known moves. If there is no data 
+    # available for the requested configuration, use the known board that's
+    # most similar to it.
     #
     # 2) Measure how similar the board loaded is to the board requested with a
     # ratio called the similarity factor.
@@ -120,6 +120,7 @@ module Draughts
 
         untested_moves.each do |ut|
           prob = probability_of(ut)
+          return ut if prob >= Config::PROBS_THRESHOLD
           if max < prob
             max = prob
             best_move = ut
