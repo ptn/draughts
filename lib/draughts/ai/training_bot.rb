@@ -96,8 +96,12 @@ module Draughts
       end
 
       def untested_moves
-        untested = (Move.all - @board.moves_of_color(@color)).to_a
-        untested = untested - @real_board.plays.all(color: @color).map(&:move)
+        untested = (Move.all - @real_board.moves_of_color(@color)).to_a
+
+        # Inject known legal moves of the most likely board at the beginning
+        known_legals = @board.plays.all(legal: true).map(&:move)
+        untested.unshift(*known_legals)
+
         untested.select { |ut| starts_in_color? ut }
       end
 
