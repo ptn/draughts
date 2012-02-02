@@ -103,7 +103,7 @@ module Draughts
 
       def random_play
         @must_learn = @board.configuration != @conf
-        @board.plays(color: @color, legal: true).sample.move
+        @played = @board.plays(color: @color, legal: true).sample.move
       end
 
       #
