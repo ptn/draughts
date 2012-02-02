@@ -1,7 +1,7 @@
 #! /usr/bin/env ruby
 
-require_relative '../config/bots_test'
-require_relative '../lib/draughts'
+require_relative '../../config/bots_test'
+require_relative '../../lib/draughts'
 
 game = Draughts::Engine::Game.new
 result = game.play(10, 1)
@@ -11,4 +11,4 @@ bot = Draughts::AI::TrainingBot.new 'black', 'bbbbbbbbbbbb        wwwwwwwwwwww'
 result = bot.play
 fail "Bots return nil instead of playing at random" if result.nil?
 
-puts "Tests passed! \\o/"
+puts "Test nil_results passed! \\o/"
