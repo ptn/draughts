@@ -38,7 +38,7 @@ module Draughts
 
       # Determine what move to play next.
       def play
-        knows_legals? ? random_play : most_likely_play
+        @played = knows_legals? ? random_play : most_likely_play
       end
 
       #
@@ -103,7 +103,7 @@ module Draughts
 
       def random_play
         @must_learn = false
-        @played = @real_board.plays(color: @color, legal: true).sample.move
+        @real_board.plays(color: @color, legal: true).sample.move
       end
 
       #
@@ -114,6 +114,7 @@ module Draughts
       # current board configuration.
       #
       def most_likely_play
+        @must_learn = true
         best_move = nil
         max = 0
 
@@ -125,8 +126,7 @@ module Draughts
           end
         end
 
-        @must_learn = true
-        @played = best_move
+        best_move
       end
 
 
