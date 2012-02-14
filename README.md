@@ -25,29 +25,29 @@ Once inside the pry session, instantiate a bot with a board configuration:
 ```ruby
 # Board configurations follow checkers' standard notation. There are a few 
 # samples in examples/configurations.txt
-bot = Draughts::AI::TrainingBot.new("bbbbbbbbbbbb        wwwwwwwwwwww")
+bot = TrainingBot.new("bbbbbbbbbbbb        wwwwwwwwwwww")
 ```
 
 You can ask him for the probability of a move of your chosing of being legal:
 
 ```ruby
-move = Draughts::AI::Move.first :origin => 9, :destination => 14
-bot.probability_of move # => Float number, like 0.801234532
+move = Move.first(origin: 9, destination: 14)
+bot.probability_of(move) # => Float number, like 0.801234532
 ```
  
 Or ask him to find the most likely move:
 
 ```ruby
-puts bot.play # => A Draughts::AI::Move object, which prints as (origin, destination)
+puts bot.play # => A Move object, which prints as (origin, destination)
 ```
 
 Once he has chosen his move, teach him whether he was right or wrong:
 
 ```ruby
 # If the move was legal:
-bot.learn true
+bot.learn(true)
 # If it wasn't:
-bot.learn false
+bot.learn(false)
 ```
 
 This updates the training data so that the bot can make more informed guesses 
