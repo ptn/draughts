@@ -12,7 +12,8 @@ a game between 2 bots.
 
 ### Setup
 
-1. Copy data/draughts.db.example to data/draughts.db
+1. Run `bundle install`
+2. Copy data/draughts.db.example to data/draughts.db
 2. Copy config/bots.rb.exmample to config/bots.rb
 
 ### Testing the training bot
@@ -65,8 +66,7 @@ There's a couple of switches you can use:
   `-p` switch. This requires you to type Enter after everything that's printed 
 before continuing.
 
-* If you don't want any output whatsoever (maybe you want to keep the program 
-  running to build your database), pass the `-q` switch.
-
 * If you want to save the output to review it later, use the `--output=FILE` 
   switch.
+
+* If you don't want any output whatsoever, pass the `-q` switch.
