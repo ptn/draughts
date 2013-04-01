@@ -36,6 +36,9 @@ module Draughts
         end
       end
 
+      # A jump is valid iff the target square is empty and there's an enemy
+      # piece between the origin square and the destination.
+      #
       # Returns nil if the destination is not valid for a jump, otherwise returns
       # the square that the board has to check for an enemy piece.
       def valid_jump_destination?(from, to)

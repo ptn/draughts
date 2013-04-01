@@ -123,18 +123,18 @@ module Draughts
       def jump(from, to)
         jumping = @pieces[from - 1]
 
-        check = jumping.valid_jump_destination? from, to
-        return unless check
+        check_for_enemy = jumping.valid_jump_destination? from, to
+        return unless check_for_enemy
 
-        target = @pieces[check - 1]
+        target = @pieces[check_for_enemy - 1]
         valid  = (!target.nil? && target.color != jumping.color)
         return unless valid
 
         # Capture enemy piece.
-        @pieces[check - 1] = nil
+        @pieces[check_for_enemy - 1] = nil
 
         result = perform_move(from, to)
-        result.msg = "captured enemy on #{check}"
+        result.msg = "captured enemy on #{check_for_enemy}"
         result
       end
 
