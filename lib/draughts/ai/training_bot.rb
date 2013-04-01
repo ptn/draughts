@@ -80,9 +80,12 @@ module Draughts
       #
       def learn(result)
         return false unless @must_learn
+
         play = Play.get_or_create(@real_board, @played, @color)
         play.legal = result
         play.save
+
+        set_most_likely_board unless result
       end
 
       private
@@ -136,12 +139,15 @@ module Draughts
         best_move
       end
 
-
       def set_conf(conf)
-        @conf   = conf
-        @board  = Board.get_this_or_most_alike(@conf)
+        @conf = conf
         @real_board = Board.get_or_create(@conf)
-        @factor = Board.similarity_factor(conf, @board.configuration)
+        set_most_likely_board
+      end
+
+      def set_most_likely_board
+        @board  = Board.get_this_or_most_alike(@conf)
+        @factor = Board.similarity_factor(@conf, @board.configuration)
       end
 
       #
