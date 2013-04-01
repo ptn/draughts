@@ -18,8 +18,8 @@ a game between 2 bots.
 
 ### Testing the training bot
 
-Simply give bin/draughts-console execution permissions (`chmod +x bin/testbot`) 
-and run it.
+Simply give bin/draughts-console execution permissions (`chmod +x
+bin/draughts-console`) and run it.
 
 Once inside the pry session, instantiate a bot with a board configuration:
 
