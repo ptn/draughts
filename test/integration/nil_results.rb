@@ -11,4 +11,8 @@ bot = Draughts::AI::TrainingBot.new 'black', 'bbbbbbbbbbbb        wwwwwwwwwwww'
 result = bot.play
 fail "Bots return nil instead of playing at random" if result.nil?
 
+bot = Draughts::AI::TrainingBot.new 'black', 'bbbbbbbb bbbb       wwwwwwwwwwww'
+result = bot.play
+fail "Bots return nil instead of playing its best guess" if result.nil?
+
 puts "Test nil_results passed! \\o/"

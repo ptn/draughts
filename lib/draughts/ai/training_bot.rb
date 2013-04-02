@@ -85,7 +85,10 @@ module Draughts
         play.legal = result
         play.save
 
-        set_most_likely_board unless result
+        unless result
+          @board  = Board.get_this_or_most_alike(@conf)
+          @factor = Board.similarity_factor(@conf, @board.configuration)
+        end
       end
 
       private
@@ -141,12 +144,8 @@ module Draughts
 
       def set_conf(conf)
         @conf = conf
+        @board = Board.get_this_or_most_alike(@conf)
         @real_board = Board.get_or_create(@conf)
-        set_most_likely_board
-      end
-
-      def set_most_likely_board
-        @board  = Board.get_this_or_most_alike(@conf)
         @factor = Board.similarity_factor(@conf, @board.configuration)
       end
 

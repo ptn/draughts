@@ -14,7 +14,8 @@ a game between 2 bots.
 
 1. Run `bundle install`
 2. Copy data/draughts.db.example to data/draughts.db
-2. Copy config/bots.rb.exmample to config/bots.rb
+3. Copy config/bots.rb.exmample to config/bots.rb
+4. Run every test with `ruby test/integration/name_of_test_file.rb`
 
 ### Testing the training bot
 
@@ -70,3 +71,7 @@ before continuing.
   switch.
 
 * If you don't want any output whatsoever, pass the `-q` switch.
+
+### TODO
+
+1. Write a rake task to automate running all the tests.
