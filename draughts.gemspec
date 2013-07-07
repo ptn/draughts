@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency  "dm-sqlite-adapter"
   s.add_dependency  "data_mapper"
   s.add_dependency  "pry"
+  s.add_dependency  "rake"
 end
