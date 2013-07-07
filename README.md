@@ -57,9 +57,10 @@ in the future.
 
 ### Starting a game between 2 bots
 
-Give bin/draughts-trainer execution permissions (`chmod +x bin/trainer`) and
-run it.  A game (as implemented in the Engine module) between the 2 bots will
-start and be narrated to you. Watch them FIGHT TO THE DEATH.
+Give bin/draughts-trainer execution permissions (`chmod +x
+bin/draughts-trainer`) and run it.  A game (as implemented in the Engine
+module) between the 2 bots will start and be narrated to you. Watch them FIGHT
+TO THE DEATH.
 
 There's a couple of switches you can use:
 

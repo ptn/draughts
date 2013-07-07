@@ -62,15 +62,13 @@ module Draughts
 
       def parse_options(argv)
         logfile = nil
-        options = {}
-        options[:quiet] = false
-        options[:pause] = false
+        options = { :quiet => false, :pause => false }
 
         parser = OptionParser.new
         parser.on("-p") { options[:pause] = true }
         parser.on("-q") { options[:quiet] = true }
         parser.on("--output=FILE") { |file| logfile = file }
-        parser.parse(argv)
+        parser.parse!(argv)
 
         log = logfile ? File.open(File.expand_path(logfile), "a") : $stdout
 
