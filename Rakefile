@@ -1,6 +1,6 @@
 task :setup do
   cp 'data/draughts.db.example', 'data/draughts.db', verbose: true
-  cp 'data/draughts_test.db.example', 'data/draughts_test.db', verbose: true
+  cp 'data/draughts.db.example', 'data/draughts_test.db', verbose: true
   cp 'config/bots.rb.example', 'config/bots.rb', verbose: true
   test
 end
@@ -12,7 +12,7 @@ end
 
 def reset_test_db
   rm 'data/draughts_test.db', verbose: true
-  cp 'data/draughts_test.db.example', 'data/draughts_test.db', verbose: true
+  cp 'data/draughts.db.example', 'data/draughts_test.db', verbose: true
 end
 
 task :resettestdb do

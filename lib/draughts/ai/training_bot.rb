@@ -84,6 +84,7 @@ module Draughts
         play = Play.get_or_create(@real_board, @played, @color)
         play.legal = result
         play.save
+        @real_board.reload
 
         unless result
           @board  = Board.get_this_or_most_alike(@conf)
