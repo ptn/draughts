@@ -75,4 +75,6 @@ before continuing.
 
 ### TODO
 
-1. The bot learns embarrasingly slow.
+1. The bot learns embarrasingly slow. Should add a "too many failed attempts in 
+   a row" variable so that after some time it starts exploring a different 
+   region of the board.
