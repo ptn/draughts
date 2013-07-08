@@ -27,7 +27,7 @@ Once inside the pry session, instantiate a bot with a board configuration:
 ```ruby
 # Board configurations follow checkers' standard notation. There are a few
 # samples in examples/configurations.txt
-bot = TrainingBot.new("bbbbbbbbbbbb        wwwwwwwwwwww")
+bot = TrainingBot.new("black", "bbbbbbbbbbbb        wwwwwwwwwwww")
 ```
 
 You can ask him for the probability of a move of your chosing of being legal:
