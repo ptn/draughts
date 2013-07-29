@@ -24,12 +24,12 @@ module Draughts
       def play(from, to)
         if @pieces[to - 1]
           msg = "square #{to} is not empty"
-          return PlayResult.new(msg, false)
+          return PlayResult.new(msg: msg, success: false)
         end
 
         unless @pieces[from - 1]
           msg = "no piece at square #{from}"
-          return PlayResult.new(msg, false)
+          return PlayResult.new(msg: msg, success: false)
         end
 
         # Move and jump return nil on failure and an instance of PlayResult
@@ -37,7 +37,7 @@ module Draughts
         result = move(from, to) || jump(from, to)
         unless result
           msg = "can't neither capture nor move from #{from} to #{to}"
-          result = PlayResult.new(msg, false)
+          result = PlayResult.new(msg: msg, success: false)
         end
 
         result
@@ -141,8 +141,7 @@ module Draughts
       def perform_move(from, to)
         # move and jump invoke this method only when it's certain that the move
         # is valid.
-        result = PlayResult.new
-        result.success = true
+        result = PlayResult.new(success: true)
 
         moving = @pieces[from - 1]
         @pieces[from - 1] = nil

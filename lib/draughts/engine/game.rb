@@ -14,7 +14,7 @@ module Draughts
         return if @finished
 
         error_msg = validate_input(orig, dest)
-        return PlayResult.new(error_msg) if error_msg
+        return PlayResult.new(msg: error_msg, success: false) if error_msg
 
         result = @board.play(orig, dest)
         if result.success
