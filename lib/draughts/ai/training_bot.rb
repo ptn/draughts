@@ -1,3 +1,5 @@
+require_relative 'search_space'
+
 module Draughts
   module AI
 
@@ -57,11 +59,11 @@ module Draughts
       def probability_of(move)
         # Can't move an enemy piece. This is the only rule that the bot knows a
         # priori.
-        return 0.0 unless starts_in_color? move
+        return 0.0 unless @most_alike_board.square_is_color? move.origin, @color
 
         # Directly return the probability of known moves without calculations.
         if @factor == 1.0
-          play = move.plays.first(:board => @board, :color => @color)
+          play = move.plays.first(:board => @most_alike_board, :color => @color)
           if play
             return play.legal? ? 1.0 : 0.0
           end
@@ -81,42 +83,26 @@ module Draughts
       def learn(result)
         return false unless @must_learn
 
-        play = Play.get_or_create(@real_board, @played, @color)
+        play = Play.get_or_create(@board, @played, @color)
         play.legal = result
         play.save
-        @real_board.reload
+        @board.reload
 
         unless result
-          @board  = Board.get_this_or_most_alike(@conf)
-          @factor = Board.similarity_factor(@conf, @board.configuration)
+          @most_alike_board  = Board.get_this_or_most_alike(@conf)
+          @factor = Board.similarity_factor(@conf, @most_alike_board.configuration)
         end
       end
 
       private
 
       def knows_legals?
-        @real_board.plays.count(color: @color, legal: true) > 0
-      end
-
-      def starts_in_color?(move)
-        @board.configuration[move.origin - 1] == @color[0]
-      end
-
-      def untested_moves
-        untested = (Move.all - @real_board.moves_of_color(@color)).to_a
-
-        # Inject known legal moves of the most likely board at the beginning
-        known_legals = @board.plays(color: @color, legal: true).move
-        known_illegals = @real_board.plays(color: @color, legal: false).move
-        inject = known_legals - known_illegals
-        untested.unshift(*inject)
-
-        untested.select { |ut| starts_in_color? ut }
+        @board.plays.count(color: @color, legal: true) > 0
       end
 
       def random_play
         @must_learn = false
-        @real_board.plays(color: @color, legal: true).sample.move
+        @board.plays(color: @color, legal: true).sample.move
       end
 
       #
@@ -131,12 +117,13 @@ module Draughts
         best_move = nil
         max = 0
 
-        untested_moves.each do |ut|
-          prob = probability_of(ut)
-          return ut if prob >= Config::PROBS_THRESHOLD
+        search_space = SearchSpace.new(@board, @most_alike_board, @color)
+        search_space.each do |move|
+          prob = probability_of(move)
+          return move if prob >= Config::PROBS_THRESHOLD
           if max < prob
             max = prob
-            best_move = ut
+            best_move = move
           end
         end
 
@@ -145,9 +132,9 @@ module Draughts
 
       def set_conf(conf)
         @conf = conf
-        @board = Board.get_this_or_most_alike(@conf)
-        @real_board = Board.get_or_create(@conf)
-        @factor = Board.similarity_factor(@conf, @board.configuration)
+        @most_alike_board = Board.get_this_or_most_alike(@conf)
+        @board = Board.get_or_create(@conf)
+        @factor = Board.similarity_factor(@conf, @most_alike_board.configuration)
       end
 
       #
@@ -201,67 +188,67 @@ module Draughts
       end
 
       def prob_of_origin_being_legal(origin)
-        raw_count      = @board.count_origin_in_legal(origin, @color)
+        raw_count      = @most_alike_board.count_origin_in_legal(origin, @color)
         smoothed_count = raw_count + Config::SMOOTHER
 
         smoothed_legals = smoothed(:legal => true,
-          :multiplier => @board.distinct_origin_count(@color))
+          :multiplier => @most_alike_board.distinct_origin_count(@color))
 
         smoothed_count.to_f / smoothed_legals.to_f
       end
 
       def prob_of_dest_being_legal(dest)
-        raw_count      = @board.count_destination_in_legal(dest, @color)
+        raw_count      = @most_alike_board.count_destination_in_legal(dest, @color)
         smoothed_count = raw_count + Config::SMOOTHER
 
         smoothed_legals = smoothed(:legal => true,
-          :multiplier => @board.distinct_destination_count(@color))
+          :multiplier => @most_alike_board.distinct_destination_count(@color))
 
         smoothed_count.to_f / smoothed_legals.to_f
       end
 
       def prob_of_origin_being_illegal(origin)
-        raw_count      = @board.count_origin_in_illegal(origin, @color)
+        raw_count      = @most_alike_board.count_origin_in_illegal(origin, @color)
         smoothed_count = raw_count + Config::SMOOTHER
 
         smoothed_illegals = smoothed(:legal => false,
-          :multiplier => @board.distinct_origin_count(@color))
+          :multiplier => @most_alike_board.distinct_origin_count(@color))
 
         smoothed_count.to_f / smoothed_illegals.to_f
       end
 
       def prob_of_dest_being_illegal(dest)
-        raw_count      = @board.count_destination_in_illegal(dest, @color)
+        raw_count      = @most_alike_board.count_destination_in_illegal(dest, @color)
         smoothed_count = raw_count + Config::SMOOTHER
 
         smoothed_illegals = smoothed(:legal => false,
-          :multiplier => @board.distinct_destination_count(@color))
+          :multiplier => @most_alike_board.distinct_destination_count(@color))
 
         smoothed_count.to_f / smoothed_illegals.to_f
       end
 
       def prob_of_legal
-        raw_count = @board.plays.count(:legal => true)
+        raw_count = @most_alike_board.plays.count(:legal => true)
         smoothed_count = raw_count + Config::SMOOTHER
 
-        moves          = @board.moves.count
+        moves          = @most_alike_board.moves.count
         smoothed_moves = moves + Config::SMOOTHER * 2
 
         smoothed_count.to_f / smoothed_moves.to_f
       end
 
       def prob_of_illegal
-        raw_count = @board.plays.count(:legal => false)
+        raw_count = @most_alike_board.plays.count(:legal => false)
         smoothed_count = raw_count + Config::SMOOTHER
 
-        moves          = @board.moves.count
+        moves          = @most_alike_board.moves.count
         smoothed_moves = moves + Config::SMOOTHER * 2
 
         smoothed_count.to_f / smoothed_moves.to_f
       end
 
       def smoothed(opts)
-        count = @board.plays.count(:legal => opts[:legal])
+        count = @most_alike_board.plays.count(:legal => opts[:legal])
         count + Config::SMOOTHER * opts[:multiplier]
       end
     end

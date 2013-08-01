@@ -206,6 +206,10 @@ module Draughts
         repository.adapter.select(query, id, color).first
       end
 
+      def square_is_color?(square, color)
+        configuration[square - 1] == color[0]
+      end
+
       private
 
       #
